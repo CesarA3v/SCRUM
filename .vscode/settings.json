@@ -5,8 +5,11 @@
     "**/.hg": true,
     "**/CVS": true,
     "**/.DS_Store": true,
-    "**/Thumbs.db": true
+    "**/Thumbs.db": true,
+    "bootstrap-5.3.1-dist": true
   },
-  "hide-files.files": [],
+  "hide-files.files": [
+    "bootstrap-5.3.1-dist"
+  ],
   "liveServer.settings.port": 5501
 }
