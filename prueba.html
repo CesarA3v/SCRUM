@@ -1,133 +1,174 @@
 <!DOCTYPE html>
 <html lang="es">
-    <head>
-        <meta charset="UTF-8" />
-        <meta
-            name="viewport"
-            content="width=device-width, initial-scale=1.0" />
-        <title>Clima en Chihuahua</title>
-        <style>
-            body {
-                font-family: Arial, sans-serif;
-                margin: 20px;
-                background-color: #f0f0f0;
-            }
-            #app {
-                max-width: 400px;
-                margin: 0 auto;
-                background-color: white;
-                padding: 20px;
-                border-radius: 10px;
-                box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            }
-            h1 {
-                text-align: center;
-            }
-            input,
-            button {
-                width: 100%;
-                padding: 10px;
-                margin: 10px 0;
-                border: 1px solid #ccc;
-                border-radius: 5px;
-            }
-            .result {
-                margin-top: 20px;
-            }
-            .result p {
-                margin: 5px 0;
-            }
-        </style>
-    </head>
-    <body>
-        <div id="app">
-            <h1>Consulta del Clima</h1>
-            <input
-                type="text"
-                id="city"
-                placeholder="Ingresa una ciudad de Chihuahua" />
-            <button onclick="getWeather()">Obtener Clima</button>
-            <button onclick="getWeatherByLocation()">Usar mi Ubicación</button>
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Consulta del Clima con Ubicación</title>
 
-            <div
-                class="result"
-                id="weatherResult"></div>
-        </div>
+    <!-- Incluir la librería Leaflet para el mapa -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
 
-        <script>
-            const apiKey = "02ba7131593e4ca693044700243011"; // Sustituye con tu clave API de WeatherAPI
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f0f0f0;
+        }
+        #map {
+            height: 400px;
+            width: 100%;
+        }
+        #app {
+            max-width: 600px;
+            margin: 20px auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        input, button {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .result p {
+            margin: 5px 0;
+        }
+    </style>
+</head>
+<body>
 
-            // Función para obtener el clima por ciudad
-            function getWeather() {
-                const city = document.getElementById("city").value;
-                if (!city) {
-                    alert("Por favor ingresa una ciudad.");
-                    return;
+<div id="app">
+    <h1>Consulta del Clima</h1>
+    <input type="text" id="cityInput" placeholder="Ingresa una ciudad" />
+    <button onclick="getWeatherByCity()">Obtener Clima por Ciudad</button>
+    <button onclick="getWeatherByCurrentLocation()">Usar Mi Ubicación Actual</button>
+
+    <div id="map"></div>
+    <div class="result" id="weatherResult"></div>
+</div>
+
+<script>
+    const apiKey = "02ba7131593e4ca693044700243011";  // Tu clave API de WeatherAPI
+
+    // Inicializar el mapa con Leaflet.js
+    var map = L.map('map').setView([19.4326, -99.1332], 13);  // Iniciar en Ciudad de México por defecto
+
+    // Agregar capa de mapa
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    }).addTo(map);
+
+    // Crear un marcador global
+    var marker;
+
+    // Función para obtener el clima por ciudad
+    function getWeatherByCity() {
+        const city = document.getElementById("cityInput").value.trim();
+        if (!city) {
+            alert("Por favor ingresa una ciudad.");
+            return;
+        }
+
+        const url = `https://api.weatherapi.com/v1/current.json?key=${apiKey}&q=${city}&lang=es`;
+
+        fetchWeather(url);
+    }
+
+    // Función para obtener el clima por ubicación actual
+    function getWeatherByCurrentLocation() {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(
+                (position) => {
+                    const lat = position.coords.latitude;
+                    const lon = position.coords.longitude;
+
+                    // Centrar el mapa en la ubicación actual y agregar un marcador
+                    map.setView([lat, lon], 13);
+
+                    if (marker) {
+                        marker.setLatLng([lat, lon]);
+                    } else {
+                        marker = L.marker([lat, lon]).addTo(map);
+                    }
+
+                    const url = `https://api.weatherapi.com/v1/current.json?key=${apiKey}&q=${lat},${lon}&lang=es`;
+
+                    fetchWeather(url);
+                },
+                (error) => {
+                    alert("No se pudo obtener tu ubicación. Asegúrate de que la geolocalización está habilitada.");
                 }
+            );
+        } else {
+            alert("Tu navegador no soporta geolocalización.");
+        }
+    }
 
-                const url = `https://api.weatherapi.com/v1/current.json?key=${apiKey}&q=${city},MX&lang=es`;
-
-                fetchWeather(url);
-            }
-
-            // Función para obtener el clima por ubicación
-            function getWeatherByLocation() {
-                if (navigator.geolocation) {
-                    navigator.geolocation.getCurrentPosition(
-                        (position) => {
-                            const lat = position.coords.latitude;
-                            const lon = position.coords.longitude;
-
-                            const url = `https://api.weatherapi.com/v1/current.json?key=${apiKey}&q=${lat},${lon}&lang=es`;
-
-                            fetchWeather(url);
-                        },
-                        (error) => {
-                            alert(
-                                "No se pudo obtener tu ubicación. Asegúrate de que la geolocalización está habilitada."
-                            );
-                        }
-                    );
+    // Función para realizar la solicitud y mostrar los resultados del clima
+    function fetchWeather(url) {
+        fetch(url)
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    document.getElementById("weatherResult").innerHTML = `<p>No se pudo obtener el clima. Intenta de nuevo.</p>`;
                 } else {
-                    alert("Tu navegador no soporta geolocalización.");
+                    const weather = data.current;
+                    const location = data.location;
+
+                    document.getElementById("weatherResult").innerHTML = `
+                        <h3>${location.name}, ${location.country}</h3>
+                        <p><strong>Condición:</strong> ${weather.condition.text}</p>
+                        <p><strong>Temperatura:</strong> ${weather.temp_c} °C</p>
+                        <p><strong>Humedad:</strong> ${weather.humidity}%</p>
+                        <p><strong>Viento:</strong> ${weather.wind_kph} km/h</p>
+                        <p><strong>Presión atmosférica:</strong> ${weather.pressure_mb} mb</p>
+                        <p><strong>Punto de Rocío:</strong> ${weather.dewpoint_c} °C</p>
+                        <p><strong>Visibilidad:</strong> ${weather.vis_km} km</p>
+                    `;
                 }
-            }
+            })
+            .catch((err) => {
+                document.getElementById("weatherResult").innerHTML = `<p>Hubo un error al obtener los datos. Intenta de nuevo más tarde.</p>`;
+            });
+    }
 
-            // Función para realizar la consulta a WeatherAPI
-            function fetchWeather(url) {
-                fetch(url)
-                    .then((response) => response.json())
-                    .then((data) => {
-                        if (data.error) {
-                            document.getElementById(
-                                "weatherResult"
-                            ).innerHTML = `<p>No se encontró la ciudad. Intenta de nuevo.</p>`;
-                            document.getElementById(
-                                "weatherResult"
-                            ).innerHTML = `<p>No se pudo obtener el clima. Intenta de nuevo.</p>`;
-                        } else {
-                            const weather = data.current;
-                            const location = data.location;
+    // Función para permitir la búsqueda de ubicación en el mapa (opcional)
+    var geocoder = L.Control.Geocoder.nominatim();
+    L.Control.geocoder({
+        query: "Ciudad de México"
+    }).addTo(map);
 
-                            document.getElementById(
-                                "weatherResult"
-                            ).innerHTML = `
-                            <h3>${data.location.name}, ${data.location.country}</h3>
-                            <h3>Ubicación: ${location.name}, ${location.region}, ${location.country}</h3>
-                           <p><strong>Condición:</strong> ${weather.condition.text}</p>
-                           <p><strong>Temperatura:</strong> ${weather.temp_c} °C</p>
-                           <p><strong>Humedad:</strong> ${weather.humidity}%</p>
-                           <p><strong>Viento:</strong> ${weather.wind_kph} km/h</p>
-                            <p><strong>Última Actualización:</strong> ${location.localtime}</p>
-                       `;
-                        }
-                    })
-                    .catch((err) => {
-                        document.getElementById(
-                            "weatherResult"
-                        ).innerHTML = `<p>Hubo un error al obtener los datos. Intenta de nuevo más tarde.</p>`;
-                    });
-            }
-        </script>
-    </body>
+    // Permitir búsqueda de ubicación en el mapa (input de búsqueda)
+    document.getElementById("cityInput").addEventListener("input", function() {
+        var city = document.getElementById("cityInput").value;
+        if (city.length >= 3) {
+            geocoder.geocode(city, function(results) {
+                if (results.length > 0) {
+                    var latLon = results[0].center;
+                    map.setView(latLon, 13);
+                    if (marker) {
+                        marker.setLatLng(latLon);
+                    } else {
+                        marker = L.marker(latLon).addTo(map);
+                    }
+                    getWeatherByCoordinates(latLon[0], latLon[1]);
+                }
+            });
+        }
+    });
+
+    // Función para obtener el clima usando coordenadas manualmente
+    function getWeatherByCoordinates(lat, lon) {
+        const url = `https://api.weatherapi.com/v1/current.json?key=${apiKey}&q=${lat},${lon}&lang=es`;
+
+        fetchWeather(url);
+    }
+</script>
+
+</body>
 </html>
