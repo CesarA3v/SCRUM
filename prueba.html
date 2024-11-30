@@ -41,7 +41,6 @@
         <h1>Consulta del Clima</h1>
         <input type="text" id="city" placeholder="Ingresa una ciudad de Chihuahua">
         <button onclick="getWeather()">Obtener Clima</button>
-        <button onclick="getWeatherByLocation()">Clima por Ubicación Actual</button>
         
         <div class="result" id="weatherResult"></div>
     </div>
@@ -49,7 +48,6 @@
     <script>
         const apiKey = '02ba7131593e4ca693044700243011'; // Sustituye con tu clave API de WeatherAPI
         
-        // Función para obtener el clima de una ciudad
         function getWeather() {
             const city = document.getElementById("city").value;
             if (!city) {
@@ -59,36 +57,11 @@
 
             const url = `https://api.weatherapi.com/v1/current.json?key=${apiKey}&q=${city},MX&lang=es`;
 
-            fetchWeather(url);
-        }
-
-        // Función para obtener el clima basado en la ubicación actual
-        function getWeatherByLocation() {
-            if (!navigator.geolocation) {
-                alert("La geolocalización no es compatible con tu navegador.");
-                return;
-            }
-
-            navigator.geolocation.getCurrentPosition(
-                (position) => {
-                    const { latitude, longitude } = position.coords;
-                    const url = `https://api.weatherapi.com/v1/current.json?key=${apiKey}&q=${latitude},${longitude}&lang=es`;
-                    fetchWeather(url);
-                },
-                (error) => {
-                    alert("No se pudo obtener la ubicación. Por favor, intenta de nuevo.");
-                    console.error(error);
-                }
-            );
-        }
-
-        // Función para realizar la consulta a la API y mostrar los datos
-        function fetchWeather(url) {
             fetch(url)
                 .then(response => response.json())
                 .then(data => {
                     if (data.error) {
-                        document.getElementById("weatherResult").innerHTML = `<p>No se encontraron datos. Intenta de nuevo.</p>`;
+                        document.getElementById("weatherResult").innerHTML = `<p>No se encontró la ciudad. Intenta de nuevo.</p>`;
                     } else {
                         const weather = data.current;
                         document.getElementById("weatherResult").innerHTML = `
@@ -107,7 +80,6 @@
                 })
                 .catch(err => {
                     document.getElementById("weatherResult").innerHTML = `<p>Hubo un error al obtener los datos. Intenta de nuevo más tarde.</p>`;
-                    console.error(err);
                 });
         }
         //a
