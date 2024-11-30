@@ -8,9 +8,11 @@ function getWeatherByCurrentLocation() {
                 const lat = position.coords.latitude;
                 const lon = position.coords.longitude;
 
+                // Mostrar el contenedor de datos del clima mientras se cargan
+                document.getElementById("weatherResult").style.display = 'block';  // Hacer visible el div de clima
                 document.getElementById("weatherResult").innerHTML = `<p>Cargando datos...</p>`;
+                
                 const url = `https://api.weatherapi.com/v1/forecast.json?key=${apiKey}&q=${lat},${lon}&days=1&lang=es`;
-
                 fetchWeather(url);  // Llamar a la función que obtiene el clima
             },
             (error) => {
@@ -34,6 +36,7 @@ function fetchWeather(url) {
                 const current = data.current;
                 const location = data.location;
 
+                // Mostrar datos del clima
                 document.getElementById("weatherResult").innerHTML = `
                     <h3>${location.name}, ${location.country}</h3>
                     <p><strong>Última actualización:</strong> ${forecast.date}</p>
@@ -41,6 +44,8 @@ function fetchWeather(url) {
                     <p><strong>Temperatura actual:</strong> ${current.temp_c} °C (${current.temp_f} °F)</p>
                     <p><strong>Humedad:</strong> ${forecast.day.avghumidity}%</p>
                 `;
+                // Hacer visible el contenedor de sugerencias de cultivos
+                document.getElementById("cropSuggestions").style.display = 'block'; 
                 suggestCrops(current.temp_c, forecast.day.avghumidity, document.getElementById("soilType").value);
             }
         })
@@ -69,13 +74,14 @@ function suggestCrops(temperature, humidity, soilType) {
         { name: "Berenjenas", tempRange: [20, 30], humidityRange: [60, 80], soilType: "arenoso", baseSuccess: 70 }
     ];
 
+    // Evaluar cada cultivo y su tasa de éxito
     crops.forEach(crop => {
         const tempSuccess = calculateTemperatureSuccess(temperature, crop.tempRange);
         const humiditySuccess = calculateHumiditySuccess(humidity, crop.humidityRange);
         const soilSuccess = calculateSoilSuccess(soilType, crop.soilType);
 
         const cropSuccess = (tempSuccess + humiditySuccess + soilSuccess) / 3;
-        
+
         // Solo agregar cultivos con tasa de éxito mayor a 30% para mantener la relevancia
         if (cropSuccess >= 30) {
             suggestedCrops.push({ name: crop.name, successRate: cropSuccess });

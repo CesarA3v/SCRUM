@@ -84,3 +84,10 @@ button:hover {
   height: 100%;
   border-radius: 5px;
 }
+
+/* Estilos para ocultar elementos por defecto */
+#weatherResult, #cropSuggestions {
+  display: none;  /* Los elementos estarán ocultos inicialmente */
+}
+
+/* Otros estilos que ya tengas en semilla.css */
