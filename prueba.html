@@ -155,7 +155,11 @@
         const lon = latLon.lng;
 
         // Obtener el clima para la ubicación seleccionada
+<<<<<<< Updated upstream
         const url = https://api.weatherapi.com/v1/current.json?key=${apiKey}&q=${lat},${lon}&lang=es;
+=======
+        const url = `https://api.weatherapi.com/v1/current.json?key=${apiKey}&q=${lat},${lon}&lang=es`;
+>>>>>>> Stashed changes
         fetchWeather(url);
     });
 
