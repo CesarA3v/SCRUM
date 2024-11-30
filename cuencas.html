@@ -89,7 +89,7 @@
     </main>
 
     <script type="module">
-        const csvUrl = 'Estaciones_hidrometricas.csv';
+        const csvUrl = 'Estaciones_hidrometricas1.csv';
         let stations = [];
 
         const loadCSV = async () => {
@@ -101,12 +101,12 @@
 
                 // Procesar datos usando índices
                 stations = rows.map(row => ({
-                    name: row[2]?.trim(),            // Índice 0: Nombre
-                    lat: parseFloat(row[1]?.trim()), // Índice 1: Latitud
-                    lon: parseFloat(row[2]?.trim()), // Índice 2: Longitud
-                    municipio: row[3]?.trim(),       // Índice 3: Municipio
-                    cuenca: row[4]?.trim(),          // Índice 4: Cuenca
-                    altura: parseFloat(row[5]?.trim()) // Índice 5: Altura
+                    name: row[1]?.trim(),            // Índice 0: Nombre
+                    lat: parseFloat(row[2]?.trim()), // Índice 1: Latitud
+                    lon: parseFloat(row[3]?.trim()), // Índice 2: Longitud
+                    municipio: row[6]?.trim(),       // Índice 3: Municipio
+                    cuenca: row[8]?.trim(),          // Índice 4: Cuenca
+                    altura: parseFloat(row[4]?.trim()) // Índice 5: Altura
                 }));
 
                 calculateAverageHeight();
