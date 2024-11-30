@@ -38,6 +38,11 @@
         .result p {
             margin: 5px 0;
         }
+
+        /* Ocultar el control de búsqueda de Leaflet (geocoder) permanentemente */
+        .leaflet-control-geocoder {
+            display: none !important;
+        }
     </style>
 </head>
 <body>
@@ -55,7 +60,7 @@
     const apiKey = "02ba7131593e4ca693044700243011";  // Tu clave API de WeatherAPI
 
     // Inicializar el mapa con Leaflet.js
-    var map = L.map('map').setView([19.4326, -99.1332], 13);  // Iniciar en Ciudad de México por defecto
+    var map = L.map('map').setView([28.6322, -106.0794], 13);  // Iniciar en Chihuahua por defecto
 
     // Agregar capa de mapa
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -67,7 +72,7 @@
 
     // Función para obtener el clima por ciudad
     function getWeatherByCity(city) {
-        const url = `https://api.weatherapi.com/v1/current.json?key=${apiKey}&q=${city}&lang=es`;
+        const url = https://api.weatherapi.com/v1/current.json?key=${apiKey}&q=${city}&lang=es;
         fetchWeather(url);
     }
 
@@ -88,7 +93,7 @@
                         marker = L.marker([lat, lon]).addTo(map);
                     }
 
-                    const url = `https://api.weatherapi.com/v1/current.json?key=${apiKey}&q=${lat},${lon}&lang=es`;
+                    const url = https://api.weatherapi.com/v1/current.json?key=${apiKey}&q=${lat},${lon}&lang=es;
 
                     fetchWeather(url);
                 },
@@ -107,33 +112,52 @@
             .then(response => response.json())
             .then(data => {
                 if (data.error) {
-                    document.getElementById("weatherResult").innerHTML = `<p>No se pudo obtener el clima. Intenta de nuevo.</p>`;
+                    document.getElementById("weatherResult").innerHTML = <p>No se pudo obtener el clima. Intenta de nuevo.</p>;
                 } else {
                     const weather = data.current;
                     const location = data.location;
 
-                    document.getElementById("weatherResult").innerHTML = ` 
-                        <h3>${location.name}, ${location.country}</h3>
-                        <p><strong>Condición:</strong> ${weather.condition.text}</p>
-                        <p><strong>Temperatura:</strong> ${weather.temp_c} °C</p>
-                        <p><strong>Humedad:</strong> ${weather.humidity}%</p>
-                        <p><strong>Viento:</strong> ${weather.wind_kph} km/h</p>
-                        <p><strong>Presión atmosférica:</strong> ${weather.pressure_mb} mb</p>
-                        <p><strong>Punto de Rocío:</strong> ${weather.dewpoint_c} °C</p>
-                        <p><strong>Visibilidad:</strong> ${weather.vis_km} km</p>
-                    `;
+                    document.getElementById("weatherResult").innerHTML = `
+                            <h3>${data.location.name}, ${data.location.country}</h3>
+                            <h3>Ubicación: ${location.name}, ${location.region}, ${location.country}</h3>
+                           <p><strong>Condición:</strong> ${weather.condition.text}</p>
+                           <p><strong>Temperatura:</strong> ${weather.temp_c} °C</p>
+                           <p><strong>Humedad:</strong> ${weather.humidity}%</p>
+                           <p><strong>Punto de Rocío:</strong> ${weather.dewpoint_c} °C</p>
+                           <p><strong>Precipitación Última Hora:</strong> ${weather.precip_mm} mm</p>
+                           <p><strong>Nubosidad:</strong> ${weather.cloud} %</p>
+                           <p><strong>Última Actualización:</strong> ${location.localtime}</p>`;
                 }
             })
             .catch((err) => {
-                document.getElementById("weatherResult").innerHTML = `<p>Hubo un error al obtener los datos. Intenta de nuevo más tarde.</p>`;
+                document.getElementById("weatherResult").innerHTML = <p>Hubo un error al obtener los datos. Intenta de nuevo más tarde.</p>;
             });
     }
 
-    // Función para permitir la búsqueda de ubicación en el mapa
+    // Permitir búsqueda de ubicación en el mapa (input de búsqueda)
     var geocoder = L.Control.Geocoder.nominatim();
-    L.Control.geocoder({
-        query: "Ciudad de México"
-    }).addTo(map);
+    L.Control.geocoder().addTo(map);
+
+    // Agregar evento de clic en el mapa para obtener datos climatológicos
+    map.on('click', function(e) {
+        const latLon = e.latlng;
+
+        // Centrar el mapa y agregar el marcador en el lugar donde se hizo clic
+        map.setView(latLon, 13);
+
+        if (marker) {
+            marker.setLatLng(latLon);
+        } else {
+            marker = L.marker(latLon).addTo(map);
+        }
+
+        const lat = latLon.lat;
+        const lon = latLon.lng;
+
+        // Obtener el clima para la ubicación seleccionada
+        const url = https://api.weatherapi.com/v1/current.json?key=${apiKey}&q=${lat},${lon}&lang=es;
+        fetchWeather(url);
+    });
 
     // Permitir búsqueda de ubicación en el mapa (input de búsqueda)
     document.getElementById("cityInput").addEventListener("input", function() {
