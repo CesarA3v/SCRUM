@@ -45,7 +45,6 @@
 <div id="app">
     <h1>Consulta del Clima</h1>
     <input type="text" id="cityInput" placeholder="Ingresa una ciudad" />
-    <button onclick="getWeatherByCity()">Obtener Clima por Ciudad</button>
     <button onclick="getWeatherByCurrentLocation()">Usar Mi Ubicación Actual</button>
 
     <div id="map"></div>
@@ -67,15 +66,8 @@
     var marker;
 
     // Función para obtener el clima por ciudad
-    function getWeatherByCity() {
-        const city = document.getElementById("cityInput").value.trim();
-        if (!city) {
-            alert("Por favor ingresa una ciudad.");
-            return;
-        }
-
+    function getWeatherByCity(city) {
         const url = `https://api.weatherapi.com/v1/current.json?key=${apiKey}&q=${city}&lang=es`;
-
         fetchWeather(url);
     }
 
@@ -156,18 +148,11 @@
                     } else {
                         marker = L.marker(latLon).addTo(map);
                     }
-                    getWeatherByCoordinates(latLon[0], latLon[1]);
+                    getWeatherByCity(city);
                 }
             });
         }
     });
-
-    // Función para obtener el clima usando coordenadas manualmente
-    function getWeatherByCoordinates(lat, lon) {
-        const url = `https://api.weatherapi.com/v1/current.json?key=${apiKey}&q=${lat},${lon}&lang=es`;
-
-        fetchWeather(url);
-    }
 </script>
 
 </body>
