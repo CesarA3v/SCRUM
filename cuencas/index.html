@@ -5,38 +5,62 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pronóstico de Nivel de Acuífero</title>
     <link rel="stylesheet" href="styles.css">
+    <!-- Cargar la librería Chart.js para los gráficos -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
 
     <header>
-        <h1>Pronóstico de Nivel de Acuífero</h1>
-        <p>Calcula el nivel de tu acuífero según el pronóstico del clima.</p>
+        <h1>Pronóstico de Nivel del Acuífero</h1>
+        <p>Calcula el nivel de agua en tu acuífero tomando en cuenta el pronóstico climático y los efectos de la sequía.</p>
     </header>
 
     <section id="form-section">
         <h2>Datos del Acuífero y Ciudad</h2>
         <form id="form-acuifero">
             <label for="ciudad">Ciudad:</label>
-            <input type="text" id="ciudad" placeholder="Ej. Chihuahua" required>
+            <input type="text" id="ciudad" value="Kalkveld, Namibia" placeholder="Ej. Chihuahua" required>
 
             <label for="capacidadAcuifero">Capacidad Total del Acuífero (mm):</label>
-            <input type="number" id="capacidadAcuifero" placeholder="Ej. 10000" required>
+            <input type="number" id="capacidadAcuifero" value="300" placeholder="Ej. 10000" required>
 
             <label for="porcentajeLleno">Porcentaje de Llenado Actual:</label>
-            <input type="number" id="porcentajeLleno" placeholder="Ej. 50" required>
+            <input type="number" id="porcentajeLleno" value="20" placeholder="Ej. 50" required>
 
             <label for="diasPronostico">Número de días para el pronóstico:</label>
-            <input type="number" id="diasPronostico" value="7" required>
+            <input type="number" id="diasPronostico" value="14" required>
 
             <button type="submit">Calcular Pronóstico</button>
         </form>
     </section>
 
     <section id="resultado">
-        <h2>Pronóstico del Acuífero</h2>
-        <div id="pronostico"></div>
+        <h2>Pronóstico del Nivel del Acuífero</h2>
+
+        <!-- Tabla de resultados -->
+        <table id="tablaResultados">
+            <thead>
+                <tr>
+                    <th>Día</th>
+                    <th>Nivel Acuífero (mm)</th>
+                    <th>Cambio Diario (mm)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Los resultados se insertarán aquí dinámicamente -->
+            </tbody>
+        </table>
+
+        <!-- Lista resumen -->
+        <ul id="listaPronostico">
+            <!-- Los resultados de cada día se agregarán aquí -->
+        </ul>
+
+        <!-- Gráfico de evolución del nivel de acuífero -->
+        <canvas id="graficoPronostico" width="400" height="200"></canvas>
     </section>
 
-    <script src="app.js"></script>
+    <!-- Enlace al archivo JavaScript -->
+    <script src="formula.js"></script>
 </body>
 </html>

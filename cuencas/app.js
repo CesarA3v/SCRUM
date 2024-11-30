@@ -9,17 +9,34 @@ let humedad = []; // %
 let capacidadAcuifero; // Capacidad total del acuífero en mm
 let porcentajeLleno; // Porcentaje de lo lleno del acuífero (0-100)
 let diasPronosticados; // Número de días a pronosticar
+let eficienciaAbsorcion = 0.8; // Eficiencia de absorción base del acuífero
 
-// Función para calcular la evaporación diaria (en mm)
+// Función para calcular la evaporación ajustada por sequía (en mm)
 function calcularEvaporacion(tempMax, tempMin, humedadMedia) {
     const temperaturaMedia = (tempMax + tempMin) / 2; // Promedio de la temperatura
-    const coeficienteEvaporacion = 0.05; // Coeficiente de evaporación ajustable
-    return temperaturaMedia * (humedadMedia / 100) * coeficienteEvaporacion;
+    const coefEvaporacionBase = 0.05; // Coeficiente base de evaporación
+    const factorSequía = 1 + (100 - humedadMedia) / 100; // Factor de ajuste por falta de humedad (más sequía = más evaporación)
+    return temperaturaMedia * (humedadMedia / 100) * coefEvaporacionBase * factorSequía;
 }
 
-// Función para calcular el nivel del acuífero
-function calcularNivelAguas(precipitacion, evaporacion, escorrentia, nivelActual) {
-    const cambioNivel = precipitacion - (evaporacion + escorrentia);
+// Función para calcular la escorrentía ajustada por sequía
+function calcularEscorrentia(precipitacion, humedadMedia) {
+    // A mayor humedad, menor es la escorrentía
+    const escorrentiaBase = 0.05;  // Escorrentía base para condiciones normales
+    const factorSequía = 0.25 * (100 - humedadMedia) / 100; // A mayor sequía, mayor escorrentía
+    return precipitacion * (escorrentiaBase + factorSequía);
+}
+
+// Función para calcular la absorción ajustada por sequía
+function calcularAbsorcion(precipitacion, humedadMedia) {
+    // A menor humedad, menor es la absorción
+    return precipitacion * (eficienciaAbsorcion * (1 - humedadMedia / 100));
+}
+
+// Función para calcular el nivel del acuífero ajustado por sequía
+function calcularNivelAguas(precipitacion, evaporacion, escorrentia, nivelActual, humedadMedia) {
+    const absorcion = calcularAbsorcion(precipitacion, humedadMedia);  // Solo se absorbe una parte de la precipitación
+    const cambioNivel = absorcion - (evaporacion + escorrentia);  // El nivel cambia según la absorción
     return nivelActual + cambioNivel;
 }
 
@@ -27,6 +44,16 @@ function calcularNivelAguas(precipitacion, evaporacion, escorrentia, nivelActual
 function diagnosticarNivelAcuifero() {
     let nivelActual = capacidadAcuifero * (porcentajeLleno / 100); // Nivel inicial en mm
     let resultadoHTML = `<h3>Pronóstico del Nivel del Acuífero</h3>`;
+    const dias = [];
+    const niveles = [];
+    const cambios = [];
+    const listaResumen = [];
+
+    // Limpiar la tabla antes de insertar los nuevos resultados
+    const tablaResultados = document.getElementById("tablaResultados");
+    const listaPronostico = document.getElementById("listaPronostico");
+    tablaResultados.innerHTML = "";
+    listaPronostico.innerHTML = "";
 
     for (let dia = 0; dia < diasPronosticados; dia++) {
         let precipitacion = precipitaciones[dia];
@@ -34,20 +61,49 @@ function diagnosticarNivelAcuifero() {
         let temperaturaMin = tempMin[dia];
         let humedadMedia = humedad[dia];
 
-        // Calcular la evaporación usando la humedad media
+        // Calcular la evaporación ajustada por sequía
         let evaporacion = calcularEvaporacion(temperaturaMax, temperaturaMin, humedadMedia);
 
-        // Asumimos un 30% de escorrentía (porcentaje de agua que no es absorbido por el acuífero)
-        let escorrentia = precipitacion * 0.3;
+        // Calcular la escorrentía ajustada por sequía
+        let escorrentia = calcularEscorrentia(precipitacion, humedadMedia);
 
         // Calcular el nuevo nivel del acuífero
-        nivelActual = calcularNivelAguas(precipitacion, evaporacion, escorrentia, nivelActual);
+        nivelActual = calcularNivelAguas(precipitacion, evaporacion, escorrentia, nivelActual, humedadMedia);
 
-        // Mostrar el pronóstico del nivel del acuífero para el día
-        resultadoHTML += `<p>Día ${dia + 1}: Nivel del acuífero: ${nivelActual.toFixed(2)} mm</p>`;
+        // Agregar los resultados para la tabla, gráfico y lista resumen
+        dias.push(`Día ${dia + 1}`);
+        niveles.push(nivelActual.toFixed(2));
+        cambios.push((precipitacion * eficienciaAbsorcion - (evaporacion + escorrentia)).toFixed(2));
+
+        // Tabla de resultados
+        const fila = document.createElement("tr");
+        fila.innerHTML = `
+            <td>Día ${dia + 1}</td>
+            <td>${nivelActual.toFixed(2)} mm</td>
+            <td>${(precipitacion * eficienciaAbsorcion - (evaporacion + escorrentia)).toFixed(2)} mm</td>
+        `;
+        tablaResultados.appendChild(fila);
+
+        // Lista resumen
+        const item = document.createElement("li");
+        item.textContent = `Día ${dia + 1}: Nivel estimado de agua es ${nivelActual.toFixed(2)} mm (Cambio: ${(precipitacion * eficienciaAbsorcion - (evaporacion + escorrentia)).toFixed(2)} mm)`;
+        listaPronostico.appendChild(item);
     }
 
-    document.getElementById("pronostico").innerHTML = resultadoHTML;
+    // Gráfico de evolución del nivel de acuífero
+    const ctx = document.getElementById('graficoPronostico').getContext('2d');
+    new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: dias,
+            datasets: [{
+                label: 'Nivel de Agua del Acuífero (mm)',
+                data: niveles,
+                borderColor: 'rgba(75, 192, 192, 1)',
+                fill: false
+            }]
+        }
+    });
 }
 
 // Función para obtener los datos del clima

@@ -13,7 +13,7 @@ var marker;
 
 // Función para obtener el clima por ciudad
 function getWeatherByCity(city) {
-    const url = `https://api.weatherapi.com/v1/forecast.json?key=${apiKey}&q=${city}&days=1&lang=es`;  // Solicitar pronóstico de 1 día
+    const url = `https://api.weatherapi.com/v1/forecast.json?key=${apiKey}&q=${city}&days=1&lang=es&hour=1`;  // Solicitar pronóstico de 1 día con datos por hora
     fetchWeather(url);
 }
 
@@ -34,7 +34,7 @@ function getWeatherByCurrentLocation() {
                     marker = L.marker([lat, lon]).addTo(map);
                 }
 
-                const url = `https://api.weatherapi.com/v1/forecast.json?key=${apiKey}&q=${lat},${lon}&days=1&lang=es`;  // Solicitar pronóstico de 1 día
+                const url = `https://api.weatherapi.com/v1/forecast.json?key=${apiKey}&q=${lat},${lon}&days=1&lang=es&hour=1`;  // Solicitar pronóstico de 1 día con datos por hora
 
                 fetchWeather(url);
             },
@@ -58,6 +58,15 @@ function fetchWeather(url) {
                 const forecast = data.forecast.forecastday[0];  // Accede al primer día del pronóstico
                 const current = data.current;  // Datos actuales
                 const location = data.location;
+                
+                // Información del viento actual
+                const currentWind = current.wind_kph;  // Velocidad del viento actual en km/h
+                const currentWindDir = current.wind_dir;  // Dirección del viento
+
+                // Información por hora (obteniendo el viento en la hora actual)
+                const currentHour = data.forecast.forecastday[0].hour[0];  // Datos de la primera hora del pronóstico
+                const windHour = currentHour.wind_kph;  // Viento en km/h de esa hora
+                const windDirHour = currentHour.wind_dir;  // Dirección del viento de esa hora
 
                 // Mostrar la información actualizada en el HTML
                 document.getElementById("weatherResult").innerHTML = ` 
@@ -84,6 +93,10 @@ function fetchWeather(url) {
                     <p><strong>Índice UV:</strong> ${forecast.day.uv}</p>
                     <p><strong>Probabilidad de lluvia:</strong> ${forecast.day.daily_chance_of_rain}%</p>
                     <p><strong>Probabilidad de nieve:</strong> ${forecast.day.daily_chance_of_snow}%</p>
+
+                    <!-- Viento actual y viento en la hora -->
+                    <p><strong>Viento actual:</strong> ${currentWind} km/h, Dirección: ${currentWindDir}</p>
+                    <p><strong>Viento en la hora actual:</strong> ${windHour} km/h, Dirección: ${windDirHour}</p>
                 `;
             }
         })
@@ -135,6 +148,6 @@ map.on('click', function(e) {
     }
 
     // Obtener el clima de la ubicación clickeada
-    const url = `https://api.weatherapi.com/v1/forecast.json?key=${apiKey}&q=${lat},${lon}&days=1&lang=es`;  // Solicitar pronóstico de 1 día
+    const url = `https://api.weatherapi.com/v1/forecast.json?key=${apiKey}&q=${lat},${lon}&days=1&lang=es&hour=1`;  // Solicitar pronóstico de 1 día con datos por hora
     fetchWeather(url);
 });
