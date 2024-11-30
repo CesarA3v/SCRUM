@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Clima en Chihuahua</title>
+    <title>Clima en Ciudad</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -39,7 +39,7 @@
 <body>
     <div id="app">
         <h1>Consulta del Clima</h1>
-        <input type="text" id="city" placeholder="Ingresa una ciudad de Chihuahua">
+        <input type="text" id="city" placeholder="Ingresa una ciudad (Ej: Londres)">
         <button onclick="getWeather()">Obtener Clima</button>
         <button onclick="getWeatherByLocation()">Clima por Ubicación Actual</button>
         
@@ -47,8 +47,8 @@
     </div>
 
     <script>
-        const apiKey = '02ba7131593e4ca693044700243011'; // Sustituye con tu clave API de WeatherAPI
-        
+        const apiKey = '07cc062654msh6d1767deeb29807p15fa79jsn3d16f53f420f'; // Tu clave API de RapidAPI
+
         // Función para obtener el clima de una ciudad
         function getWeather() {
             const city = document.getElementById("city").value;
@@ -57,9 +57,53 @@
                 return;
             }
 
-            const url = `https://api.weatherapi.com/v1/current.json?key=${apiKey}&q=${city},MX&lang=es`;
+            // URL de la API de RapidAPI para OpenWeather
+            const url = `https://open-weather13.p.rapidapi.com/city/${city}/EN`;
 
-            fetchWeather(url);
+            // Opciones para la solicitud con los encabezados necesarios
+            const options = {
+                method: 'GET',
+                headers: {
+                    'x-rapidapi-host': 'open-weather13.p.rapidapi.com',
+                    'x-rapidapi-key': apiKey
+                }
+            };
+
+            // Realizar la solicitud
+            fetch(url, options)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.error) {
+                        document.getElementById("weatherResult").innerHTML = `<p>No se encontraron datos. Intenta de nuevo.</p>`;
+                    } else {
+                        // Procesar los datos
+                        const weather = data.main;
+                        const weatherCondition = data.weather[0];
+                        const wind = data.wind;
+                        const rain = data.rain ? data.rain['1h'] : 0; // Precipitación en la última hora
+                        const visibility = data.visibility / 1000; // Convertir de metros a kilómetros
+                        const dewPoint = weather.temp - ((100 - weather.humidity) / 5); // Estimación del punto de rocío
+
+                        // Traducir la descripción del clima (condición)
+                        const translatedCondition = translateCondition(weatherCondition.description);
+
+                        document.getElementById("weatherResult").innerHTML = `
+                            <h3>${data.name}, ${data.sys.country}</h3>
+                            <p><strong>Condición:</strong> ${translatedCondition}</p>
+                            <p><strong>Temperatura:</strong> ${weather.temp} °C</p>
+                            <p><strong>Humedad:</strong> ${weather.humidity}%</p>
+                            <p><strong>Viento:</strong> ${wind.speed} m/s</p>
+                            <p><strong>Presión atmosférica:</strong> ${weather.pressure} hPa</p>
+                            <p><strong>Visibilidad:</strong> ${visibility} km</p>
+                            <p><strong>Precipitación:</strong> ${rain} mm</p>
+                            <p><strong>Punto de rocío:</strong> ${dewPoint.toFixed(2)} °C</p>
+                        `;
+                    }
+                })
+                .catch(err => {
+                    document.getElementById("weatherResult").innerHTML = `<p>Hubo un error al obtener los datos. Intenta de nuevo más tarde.</p>`;
+                    console.error(err);
+                });
         }
 
         // Función para obtener el clima basado en la ubicación actual
@@ -72,8 +116,52 @@
             navigator.geolocation.getCurrentPosition(
                 (position) => {
                     const { latitude, longitude } = position.coords;
-                    const url = `https://api.weatherapi.com/v1/current.json?key=${apiKey}&q=${latitude},${longitude}&lang=es`;
-                    fetchWeather(url);
+
+                    // URL de la API de RapidAPI para OpenWeather usando latitud y longitud
+                    const url = `https://open-weather13.p.rapidapi.com/weather?lat=${latitude}&lon=${longitude}&appid=${apiKey}&lang=es`;
+
+                    const options = {
+                        method: 'GET',
+                        headers: {
+                            'x-rapidapi-host': 'open-weather13.p.rapidapi.com',
+                            'x-rapidapi-key': apiKey
+                        }
+                    };
+
+                    // Realizar la solicitud
+                    fetch(url, options)
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.error) {
+                                document.getElementById("weatherResult").innerHTML = `<p>No se encontraron datos. Intenta de nuevo.</p>`;
+                            } else {
+                                // Procesar los datos
+                                const weather = data.main;
+                                const weatherCondition = data.weather[0];
+                                const wind = data.wind;
+                                const rain = data.rain ? data.rain['1h'] : 0;
+                                const visibility = data.visibility / 1000;
+                                const dewPoint = weather.temp - ((100 - weather.humidity) / 5);
+
+                                const translatedCondition = translateCondition(weatherCondition.description);
+
+                                document.getElementById("weatherResult").innerHTML = `
+                                    <h3>${data.name}, ${data.sys.country}</h3>
+                                    <p><strong>Condición:</strong> ${translatedCondition}</p>
+                                    <p><strong>Temperatura:</strong> ${weather.temp} °C</p>
+                                    <p><strong>Humedad:</strong> ${weather.humidity}%</p>
+                                    <p><strong>Viento:</strong> ${wind.speed} m/s</p>
+                                    <p><strong>Presión atmosférica:</strong> ${weather.pressure} hPa</p>
+                                    <p><strong>Visibilidad:</strong> ${visibility} km</p>
+                                    <p><strong>Precipitación:</strong> ${rain} mm</p>
+                                    <p><strong>Punto de rocío:</strong> ${dewPoint.toFixed(2)} °C</p>
+                                `;
+                            }
+                        })
+                        .catch(err => {
+                            document.getElementById("weatherResult").innerHTML = `<p>Hubo un error al obtener los datos. Intenta de nuevo más tarde.</p>`;
+                            console.error(err);
+                        });
                 },
                 (error) => {
                     alert("No se pudo obtener la ubicación. Por favor, intenta de nuevo.");
@@ -82,35 +170,22 @@
             );
         }
 
-        // Función para realizar la consulta a la API y mostrar los datos
-        function fetchWeather(url) {
-            fetch(url)
-                .then(response => response.json())
-                .then(data => {
-                    if (data.error) {
-                        document.getElementById("weatherResult").innerHTML = `<p>No se encontraron datos. Intenta de nuevo.</p>`;
-                    } else {
-                        const weather = data.current;
-                        document.getElementById("weatherResult").innerHTML = `
-                            <h3>${data.location.name}, ${data.location.country}</h3>
-                            <p><strong>Condición:</strong> ${weather.condition.text}</p>
-                            <p><strong>Temperatura:</strong> ${weather.temp_c} °C</p>
-                            <p><strong>Humedad:</strong> ${weather.humidity}%</p>
-                            <p><strong>Viento:</strong> ${weather.wind_kph} km/h</p>
-                            <p><strong>Presión atmosférica:</strong> ${weather.pressure_mb} hPa</p>
-                            <p><strong>Índice UV:</strong> ${weather.uv}</p>
-                            <p><strong>Punto de rocío:</strong> ${weather.dewpoint_c} °C</p>
-                            <p><strong>Visibilidad:</strong> ${weather.vis_km} km</p>
-                            <p><strong>Precipitación:</strong> ${weather.precip_mm} mm</p>
-                        `;
-                    }
-                })
-                .catch(err => {
-                    document.getElementById("weatherResult").innerHTML = `<p>Hubo un error al obtener los datos. Intenta de nuevo más tarde.</p>`;
-                    console.error(err);
-                });
+        // Función para traducir las condiciones del clima
+        function translateCondition(condition) {
+            const translations = {
+                "clear sky": "cielo despejado",
+                "few clouds": "pocas nubes",
+                "scattered clouds": "nubes dispersas",
+                "broken clouds": "nubes rotas",
+                "shower rain": "lluvia de ducha",
+                "rain": "lluvia",
+                "thunderstorm": "tormenta eléctrica",
+                "snow": "nieve",
+                "mist": "neblina"
+            };
+
+            return translations[condition] || condition;
         }
-        //a
     </script>
 </body>
 </html>
