@@ -49,29 +49,33 @@ function getWeatherByCurrentLocation() {
 
 // Función para realizar la solicitud y mostrar los resultados del clima
 function fetchWeather(url) {
-    fetch(url)
-        .then(response => response.json())
-        .then(data => {
-            if (data.error) {
-                document.getElementById("weatherResult").innerHTML = `<p>No se pudo obtener el clima. Intenta de nuevo.</p>`;
-            } else {
-                const weather = data.current;
-                const location = data.location;
+  fetch(url)
+      .then(response => response.json())
+      .then(data => {
+          if (data.error) {
+              document.getElementById("weatherResult").innerHTML = `<p>No se pudo obtener el clima. Intenta de nuevo.</p>`;
+          } else {
+              const weather = data.current;
+              const location = data.location;
 
-                document.getElementById("weatherResult").innerHTML = ` 
-                    <h3>${location.name}, ${location.country}</h3>
-                    <p><strong>Condición:</strong> ${weather.condition.text}</p>
-                    <p><strong>Temperatura:</strong> ${weather.temp_c} °C</p>
-                    <p><strong>Humedad:</strong> ${weather.humidity}%</p>
-                    <p><strong>Viento:</strong> ${weather.wind_kph} km/h</p>
-                    <p><strong>Punto de Rocío:</strong> ${weather.dewpoint_c} °C</p>
-                `;
-            }
-        })
-        .catch((err) => {
-            document.getElementById("weatherResult").innerHTML = `<p>Hubo un error al obtener los datos. Intenta de nuevo más tarde.</p>`;
-        });
+              document.getElementById("weatherResult").innerHTML = ` 
+                  <h3>${location.name}, ${location.country}</h3>
+                  <p><strong>Última actualización:</strong> ${weather.last_updated}</p>
+                  <p><strong>Condición:</strong> ${weather.condition.text}</p>
+                  <p><strong>Temperatura:</strong> ${weather.temp_c} °C</p>
+                  <p><strong>Humedad:</strong> ${weather.humidity}%</p>
+                  <p><strong>Viento:</strong> ${weather.wind_kph} km/h</p>
+                  <p><strong>Punto de Rocío:</strong> ${weather.dewpoint_c} °C</p>
+                  <p><strong>Índice de Calor:</strong> ${weather.heatindex_c} °C</p>
+                  <p><strong>Precipitación:</strong> ${weather.precip_mm} mm</p>
+              `;
+          }
+      })
+      .catch((err) => {
+          document.getElementById("weatherResult").innerHTML = `<p>Hubo un error al obtener los datos. Intenta de nuevo más tarde.</p>`;
+      });
 }
+
 
 // Función para permitir la búsqueda de ubicación en el mapa
 var geocoder = L.Control.Geocoder.nominatim();
