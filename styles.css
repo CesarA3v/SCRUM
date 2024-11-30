@@ -1,0 +1,115 @@
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,100..700;1,100..700&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Press Start 2P', cursive;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    width: 100vw;
+    overflow: hidden;
+    color: #fff;
+}
+
+.main-container {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.8);
+    border-radius: 15px;
+    position: relative;
+}
+
+.sidebar {
+    background-color: #C0C0C0;
+    color: #ffffff;
+    width: 15%;
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    align-items: start;
+    border-right: 2px solid #000080;
+    position: relative;
+}
+
+.up_sidebar {
+    background-color: #000080;
+    padding: 5px;
+    margin-bottom: 20px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-size: 12px;
+    width: 100%;
+}
+
+.middle_sidebar {
+    padding: 20px;
+}
+
+.middle_sidebar button {
+    background-color: rgba(255, 255, 255, 0.7);
+    border: 2px solid #000000;
+    color: rgb(0, 0, 0);
+    padding: 10px 15px;
+    margin-bottom: 16px;
+    width: 100%;
+    cursor: pointer;
+    text-align: left;
+    font-family: 'Press Start 2P';
+    font-size: 14px;
+    transition: background-color 0.3s ease;
+}
+
+.middle_sidebar button:hover {
+    background-color: rgba(255, 128, 192, 0.9);
+}
+
+.content {
+    flex-grow: 1;
+
+    background: linear-gradient(135deg, #ff8aae, #7366ff);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+}
+
+.content h1 {
+    text-align: center;
+    font-size: 36px;
+    color: #faff00;
+    margin-bottom: 30px;
+    text-shadow: 4px 4px 10px #ff0080;
+}
+
+.ascii-title {
+    font-family: 'Courier New', monospace; /* Fuente monoespaciada */
+    color: #faff00; /* Color neon */
+    text-shadow: 2px 2px 10px #ff0080; /* Sombra para darle efecto neon */
+    white-space: pre-wrap; /* Mantener formato de texto ASCII */
+    text-align: center; /* Centrar el texto */
+    font-size: 12px; /* Ajusta el tamaño según lo necesites */
+    margin-bottom: 30px;
+}
+
+.main-title {
+    font-family: 'Courier New', monospace; /* Fuente monoespaciada */
+    color: #ffffff; /* Color neon */
+    text-shadow: 2px 2px 10px #ff0080; /* Sombra para darle efecto neon */
+    white-space: pre-wrap; /* Mantener formato de texto ASCII */
+    text-align: center; /* Centrar el texto */
+    font-size: 18px; /* Ajusta el tamaño según lo necesites */
+    margin-bottom: 30px;
+}
+
+.paint{
+	background-color: white;
+    height: 100%;
+}
