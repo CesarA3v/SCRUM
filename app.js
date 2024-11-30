@@ -13,7 +13,7 @@ var marker;
 
 // Función para obtener el clima por ciudad
 function getWeatherByCity(city) {
-    const url = `https://api.weatherapi.com/v1/current.json?key=${apiKey}&q=${city}&lang=es`;
+    const url = `https://api.weatherapi.com/v1/forecast.json?key=${apiKey}&q=${city}&days=1&lang=es`;  // Solicitar pronóstico de 1 día
     fetchWeather(url);
 }
 
@@ -34,7 +34,7 @@ function getWeatherByCurrentLocation() {
                     marker = L.marker([lat, lon]).addTo(map);
                 }
 
-                const url = `https://api.weatherapi.com/v1/current.json?key=${apiKey}&q=${lat},${lon}&lang=es`;
+                const url = `https://api.weatherapi.com/v1/forecast.json?key=${apiKey}&q=${lat},${lon}&days=1&lang=es`;  // Solicitar pronóstico de 1 día
 
                 fetchWeather(url);
             },
@@ -49,33 +49,48 @@ function getWeatherByCurrentLocation() {
 
 // Función para realizar la solicitud y mostrar los resultados del clima
 function fetchWeather(url) {
-  fetch(url)
-      .then(response => response.json())
-      .then(data => {
-          if (data.error) {
-              document.getElementById("weatherResult").innerHTML = `<p>No se pudo obtener el clima. Intenta de nuevo.</p>`;
-          } else {
-              const weather = data.current;
-              const location = data.location;
+    fetch(url)
+        .then(response => response.json())
+        .then(data => {
+            if (data.error) {
+                document.getElementById("weatherResult").innerHTML = `<p>No se pudo obtener el clima. Intenta de nuevo.</p>`;
+            } else {
+                const forecast = data.forecast.forecastday[0];  // Accede al primer día del pronóstico
+                const current = data.current;  // Datos actuales
+                const location = data.location;
 
-              document.getElementById("weatherResult").innerHTML = ` 
-                  <h3>${location.name}, ${location.country}</h3>
-                  <p><strong>Última actualización:</strong> ${weather.last_updated}</p>
-                  <p><strong>Condición:</strong> ${weather.condition.text}</p>
-                  <p><strong>Temperatura:</strong> ${weather.temp_c} °C</p>
-                  <p><strong>Humedad:</strong> ${weather.humidity}%</p>
-                  <p><strong>Viento:</strong> ${weather.wind_kph} km/h</p>
-                  <p><strong>Punto de Rocío:</strong> ${weather.dewpoint_c} °C</p>
-                  <p><strong>Índice de Calor:</strong> ${weather.heatindex_c} °C</p>
-                  <p><strong>Precipitación:</strong> ${weather.precip_mm} mm</p>
-              `;
-          }
-      })
-      .catch((err) => {
-          document.getElementById("weatherResult").innerHTML = `<p>Hubo un error al obtener los datos. Intenta de nuevo más tarde.</p>`;
-      });
+                // Mostrar la información actualizada en el HTML
+                document.getElementById("weatherResult").innerHTML = ` 
+                    <h3>${location.name}, ${location.country}</h3>
+                    <p><strong>Última actualización:</strong> ${forecast.date}</p>
+                    <p><strong>Condición:</strong> ${forecast.day.condition.text}</p>
+                    
+                    <!-- Temperatura actual -->
+                    <p><strong>Temperatura actual:</strong> ${current.temp_c} °C (${current.temp_f} °F)</p>
+
+                    <!-- Temperaturas máxima y mínima -->
+                    <p><strong>Temperatura máxima:</strong> ${forecast.day.maxtemp_c} °C (${forecast.day.maxtemp_f} °F)</p>
+                    <p><strong>Temperatura mínima:</strong> ${forecast.day.mintemp_c} °C (${forecast.day.mintemp_f} °F)</p>
+                    
+                    <!-- Humedad -->
+                    <p><strong>Humedad promedio:</strong> ${forecast.day.avghumidity}%</p>
+                    
+                    <!-- Precipitación -->
+                    <p><strong>Precipitación total:</strong> ${forecast.day.totalprecip_mm} mm (${forecast.day.totalprecip_in} in)</p>
+                    
+                    <!-- Otros detalles -->
+                    <p><strong>Viento máximo:</strong> ${forecast.day.maxwind_kph} km/h (${forecast.day.maxwind_mph} mph)</p>
+                    <p><strong>Visibilidad promedio:</strong> ${forecast.day.avgvis_km} km (${forecast.day.avgvis_miles} miles)</p>
+                    <p><strong>Índice UV:</strong> ${forecast.day.uv}</p>
+                    <p><strong>Probabilidad de lluvia:</strong> ${forecast.day.daily_chance_of_rain}%</p>
+                    <p><strong>Probabilidad de nieve:</strong> ${forecast.day.daily_chance_of_snow}%</p>
+                `;
+            }
+        })
+        .catch((err) => {
+            document.getElementById("weatherResult").innerHTML = `<p>Hubo un error al obtener los datos. Intenta de nuevo más tarde.</p>`;
+        });
 }
-
 
 // Función para permitir la búsqueda de ubicación en el mapa
 var geocoder = L.Control.Geocoder.nominatim();
@@ -120,6 +135,6 @@ map.on('click', function(e) {
     }
 
     // Obtener el clima de la ubicación clickeada
-    const url = `https://api.weatherapi.com/v1/current.json?key=${apiKey}&q=${lat},${lon}&lang=es`;
+    const url = `https://api.weatherapi.com/v1/forecast.json?key=${apiKey}&q=${lat},${lon}&days=1&lang=es`;  // Solicitar pronóstico de 1 día
     fetchWeather(url);
 });

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pronóstico de Nivel de Acuífero</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <header>
+        <h1>Pronóstico de Nivel de Acuífero</h1>
+        <p>Calcula el nivel de tu acuífero según el pronóstico del clima.</p>
+    </header>
+
+    <section id="form-section">
+        <h2>Datos del Acuífero y Ciudad</h2>
+        <form id="form-acuifero">
+            <label for="ciudad">Ciudad:</label>
+            <input type="text" id="ciudad" placeholder="Ej. Chihuahua" required>
+
+            <label for="capacidadAcuifero">Capacidad Total del Acuífero (mm):</label>
+            <input type="number" id="capacidadAcuifero" placeholder="Ej. 10000" required>
+
+            <label for="porcentajeLleno">Porcentaje de Llenado Actual:</label>
+            <input type="number" id="porcentajeLleno" placeholder="Ej. 50" required>
+
+            <label for="diasPronostico">Número de días para el pronóstico:</label>
+            <input type="number" id="diasPronostico" value="7" required>
+
+            <button type="submit">Calcular Pronóstico</button>
+        </form>
+    </section>
+
+    <section id="resultado">
+        <h2>Pronóstico del Acuífero</h2>
+        <div id="pronostico"></div>
+    </section>
+
+    <script src="app.js"></script>
+</body>
+</html>
