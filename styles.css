@@ -1,5 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,100..700;1,100..700&display=swap');
+
 
 * {
     margin: 0;
@@ -8,7 +7,7 @@
 }
 
 body {
-    font-family: 'Press Start 2P', cursive;
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -22,14 +21,14 @@ body {
     display: flex;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.7);
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.8);
+    background-color: rgba(41, 23, 86, 0.7);
+    box-shadow: 0 8px 16px rgba(27, 19, 87, 0.8);
     border-radius: 15px;
     position: relative;
 }
 
 .sidebar {
-    background-color: #C0C0C0;
+    background-color: #0a0a40;
     color: #ffffff;
     width: 15%;
     display: flex;
@@ -41,10 +40,11 @@ body {
 }
 
 .up_sidebar {
-    background-color: #000080;
+    background-color: #0a0a40;
     padding: 5px;
     margin-bottom: 20px;
     text-transform: uppercase;
+    align-items: center;
     letter-spacing: 2px;
     font-size: 12px;
     width: 100%;
@@ -55,21 +55,22 @@ body {
 }
 
 .middle_sidebar button {
-    background-color: rgba(255, 255, 255, 0.7);
-    border: 2px solid #000000;
-    color: rgb(0, 0, 0);
+    background-color: rgb(255, 255, 255);
+    border: 2px solid #1a104f;
+    color: rgb(46, 25, 91);
     padding: 10px 15px;
     margin-bottom: 16px;
     width: 100%;
     cursor: pointer;
     text-align: left;
-    font-family: 'Press Start 2P';
+    font-family:Arial, Helvetica, sans-serif;
     font-size: 14px;
     transition: background-color 0.3s ease;
+    border-radius: 10px;
 }
 
 .middle_sidebar button:hover {
-    background-color: rgba(255, 128, 192, 0.9);
+    background-color: rgba(185, 186, 226, 0.9);
 }
 
 .content {
@@ -112,4 +113,9 @@ body {
 .paint{
 	background-color: white;
     height: 100%;
+}
+
+.main-image{
+    width: 200px;
+    height: 200px;
 }
