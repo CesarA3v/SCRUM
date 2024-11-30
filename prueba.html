@@ -113,17 +113,17 @@
                     const location = data.location;
 
                     document.getElementById("weatherResult").innerHTML = `
-                        <h3>${location.name}, ${location.country}</h3>
-                        <p><strong>Condición:</strong> ${weather.condition.text}</p>
-                        <p><strong>Temperatura:</strong> ${weather.temp_c} °C</p>
-                        <p><strong>Humedad:</strong> ${weather.humidity}%</p>
-                        <p><strong>Viento:</strong> ${weather.wind_kph} km/h</p>
-                        <p><strong>Presión atmosférica:</strong> ${weather.pressure_mb} mb</p>
-                        <p><strong>Punto de Rocío:</strong> ${weather.dewpoint_c} °C</p>
-                        <p><strong>Visibilidad:</strong> ${weather.vis_km} km</p>
-                    `;
-                }
-            })
+                            <h3>${data.location.name}, ${data.location.country}</h3>
+                            <h3>Ubicación: ${location.name}, ${location.region}, ${location.country}</h3>
+                           <p><strong>Condición:</strong> ${weather.condition.text}</p>
+                           <p><strong>Temperatura:</strong> ${weather.temp_c} °C</p>
+                           <p><strong>Humedad:</strong> ${weather.humidity}%</p>
+                           <p><strong>Punto de Rocío:</strong> ${weather.dewpoint_c} °C</p>
+                           <p><strong>Precipitación Última Hora:</strong> ${weather.precip_mm} mm</p>
+                           <p><strong>Nubosidad:</strong> ${weather.cloud} %</p>
+                           <p><strong>Última Actualización:</strong> ${location.localtime}</p>`;
+                        }
+                    })
             .catch((err) => {
                 document.getElementById("weatherResult").innerHTML = `<p>Hubo un error al obtener los datos. Intenta de nuevo más tarde.</p>`;
             });
