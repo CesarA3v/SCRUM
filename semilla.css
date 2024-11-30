@@ -1,66 +1,19 @@
-body {
-  font-family: Arial, sans-serif;
-  margin: 0;
-  background-color: #f8f9fa;
-  color: #495057;
-}
-
-#app {
-  max-width: 600px;
-  margin: 40px auto;
-  background-color: white;
+/* Estilo para los elementos de cultivo */
+.crop-element {
+  position: relative;
   padding: 20px;
-  border-radius: 10px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  text-align: center;
-}
-
-button {
-  width: 100%;
-  padding: 12px;
   margin: 10px 0;
-  border: 1px solid #ccc;
+  background-color: #fff; /* Fondo blanco */
+  border: 3px solid rgb(72, 61, 139); /* Borde estático */
   border-radius: 8px;
-  font-size: 16px;
-  background-color: #5bc0de;
-  color: white;
-  cursor: pointer;
+  box-sizing: border-box;
+  overflow: hidden;
 }
 
-button:hover {
-  background-color: #007bff;
-}
-
-#weatherResult {
-  margin-top: 20px;
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-}
-
-#cropSuggestions {
-  margin-top: 20px;
-}
-
-#cropSuggestions ul {
-  list-style-type: none;
-  padding: 0;
-}
-
-#cropSuggestions li {
-  display: flex;
-  align-items: center;
-  margin-bottom: 15px;
-  padding: 10px;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  background-color: #f8f9fa;
-}
-
+/* Estilo para el icono */
 .crop-icon {
-  font-size: 24px;
-  font-weight: bold;
-  margin-right: 10px;
+  font-size: 30px;
+  margin-right: 15px;
 }
 
 .crop-name {
@@ -70,24 +23,39 @@ button:hover {
 
 .success-rate {
   font-size: 14px;
-  margin-top: 5px;
+  color: gray;
 }
 
 .success-bar {
-  height: 8px;
-  background-color: #e0e0e0;
+  width: 100%;
+  background-color: #f0f0f0;
   border-radius: 5px;
+  overflow: hidden;
   margin-top: 5px;
 }
 
 .success-fill {
-  height: 100%;
+  height: 6px;
   border-radius: 5px;
 }
 
-/* Estilos para ocultar elementos por defecto */
-#weatherResult, #cropSuggestions {
-  display: none;  /* Los elementos estarán ocultos inicialmente */
+/* Estilo adicional para las sugerencias de cultivos */
+#cropSuggestions {
+  list-style-type: none;
+  padding-left: 0;
 }
 
-/* Otros estilos que ya tengas en semilla.css */
+#cropSuggestions li {
+  display: flex;
+  align-items: center;
+  margin: 10px 0;
+  border: 2px solid #ddd;
+  border-radius: 8px;
+  padding: 15px;
+  background-color: #f9f9f9;
+  transition: transform 0.3s ease;
+}
+
+#cropSuggestions li:hover {
+  transform: scale(1.05);
+}
