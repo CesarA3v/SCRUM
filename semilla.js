@@ -66,17 +66,17 @@ function suggestCrops(temperature, humidity, soilType) {
 
     // Calcular la tasa de éxito para cada cultivo basado en condiciones
     const crops = [
-        { name: "Maíz", tempRange: [18, 30], humidityRange: [50, 80], soilType: "arcilloso", baseSuccess: 80 },
-        { name: "Tomates", tempRange: [20, 30], humidityRange: [60, 80], soilType: "arenoso", baseSuccess: 85 },
-        { name: "Frijoles", tempRange: [20, 30], humidityRange: [50, 70], soilType: "limoso", baseSuccess: 75 },
-        { name: "Arroz", tempRange: [22, 35], humidityRange: [70, 90], soilType: "arcilloso", baseSuccess: 70 },
-        { name: "Lechugas", tempRange: [15, 22], humidityRange: [60, 80], soilType: "limoso", baseSuccess: 80 },
-        { name: "Cebollas", tempRange: [18, 25], humidityRange: [50, 70], soilType: "arenoso", baseSuccess: 70 },
-        { name: "Zanahorias", tempRange: [15, 22], humidityRange: [50, 60], soilType: "limoso", baseSuccess: 80 },
-        { name: "Espárragos", tempRange: [10, 20], humidityRange: [50, 70], soilType: "limoso", baseSuccess: 60 },
-        { name: "Pepinos", tempRange: [22, 30], humidityRange: [60, 80], soilType: "arenoso", baseSuccess: 75 },
-        { name: "Acelgas", tempRange: [15, 25], humidityRange: [50, 70], soilType: "arcilloso", baseSuccess: 65 },
-        { name: "Berenjenas", tempRange: [20, 30], humidityRange: [60, 80], soilType: "arenoso", baseSuccess: 70 }
+        { name: "Maíz", tempRange: [18, 30], humidityRange: [50, 80], soilType: "arcilloso", baseSuccess: 80, icon: "fas fa-seedling" },
+        { name: "Tomates", tempRange: [20, 30], humidityRange: [60, 80], soilType: "arenoso", baseSuccess: 85, icon: "fas fa-apple-alt" },
+        { name: "Frijoles", tempRange: [20, 30], humidityRange: [50, 70], soilType: "limoso", baseSuccess: 75, icon: "fas fa-seedling" },
+        { name: "Arroz", tempRange: [22, 35], humidityRange: [70, 90], soilType: "arcilloso", baseSuccess: 70, icon: "fa-solid fa-seedling" },
+        { name: "Lechugas", tempRange: [15, 22], humidityRange: [60, 80], soilType: "limoso", baseSuccess: 80, icon: "fas fa-leaf" },
+        { name: "Cebollas", tempRange: [18, 25], humidityRange: [50, 70], soilType: "arenoso", baseSuccess: 70, icon: "fas fa-seedling" },
+        { name: "Zanahorias", tempRange: [15, 22], humidityRange: [50, 60], soilType: "limoso", baseSuccess: 80, icon: "fas fa-carrot" },
+        { name: "Espárragos", tempRange: [10, 20], humidityRange: [50, 70], soilType: "limoso", baseSuccess: 60, icon: "fas fa-seedling" },
+        { name: "Pepinos", tempRange: [22, 30], humidityRange: [60, 80], soilType: "arenoso", baseSuccess: 75, icon: "fas fa-seedling" },
+        { name: "Acelgas", tempRange: [15, 25], humidityRange: [50, 70], soilType: "arcilloso", baseSuccess: 65, icon: "fas fa-leaf" },
+        { name: "Berenjenas", tempRange: [20, 30], humidityRange: [60, 80], soilType: "arenoso", baseSuccess: 70, icon: "fas fa-seedling" }
     ];
 
     // Evaluar cada cultivo y su tasa de éxito
@@ -89,7 +89,7 @@ function suggestCrops(temperature, humidity, soilType) {
 
         // Solo agregar cultivos con tasa de éxito mayor a 30% para mantener la relevancia
         if (cropSuccess >= 30) {
-            suggestedCrops.push({ name: crop.name, successRate: cropSuccess });
+            suggestedCrops.push({ name: crop.name, successRate: cropSuccess, icon: crop.icon });
         }
     });
 
@@ -113,7 +113,7 @@ function displayCropSuggestions(crops) {
 
         cropElement.innerHTML = `
             <div class="d-flex align-items-center">
-                <div class="crop-icon">${crop.name[0]}</div>
+                <i class="crop-icon ${crop.icon} me-3" style="font-size: 24px; color: ${color};"></i>
                 <div class="flex-grow-1">
                     <span class="crop-name">${crop.name}</span>
                     <div class="success-rate">Tasa de éxito: ${successRate.toFixed(2)}%</div>
