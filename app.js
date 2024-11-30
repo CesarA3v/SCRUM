@@ -64,9 +64,7 @@ function fetchWeather(url) {
                     <p><strong>Temperatura:</strong> ${weather.temp_c} °C</p>
                     <p><strong>Humedad:</strong> ${weather.humidity}%</p>
                     <p><strong>Viento:</strong> ${weather.wind_kph} km/h</p>
-                    <p><strong>Presión atmosférica:</strong> ${weather.pressure_mb} mb</p>
                     <p><strong>Punto de Rocío:</strong> ${weather.dewpoint_c} °C</p>
-                    <p><strong>Visibilidad:</strong> ${weather.vis_km} km</p>
                 `;
             }
         })
