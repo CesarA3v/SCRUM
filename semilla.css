@@ -59,3 +59,14 @@
 #cropSuggestions li:hover {
   transform: scale(1.05);
 }
+
+/* Centrar el botón de "Usar ubicación actual" en la página */
+.location-btn-container {
+  display: flex;
+  justify-content: center;  /* Centra horizontalmente */
+  margin-top: 10vh;          /* Reducir el margen superior para acercar el botón al título */
+}
+
+.btn {
+  width: 250px;  /* Ancho fijo para el botón */
+}

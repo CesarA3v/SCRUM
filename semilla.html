@@ -16,15 +16,30 @@
 
     <!-- Incluir el archivo de JS -->
     <script src="semilla.js" defer></script>
+
+    <style>
+        /* Centrar el botón de "Usar ubicación actual" en la página */
+        .location-btn-container {
+            display: flex;
+            justify-content: center;  /* Centra horizontalmente */
+            margin-top: 3vh;          /* Ajustado a 10vh para reducir el espacio entre el título y el botón */
+        }
+
+        .btn {
+            width: 250px;  /* Ancho fijo para el botón */
+        }
+    </style>
 </head>
 <body>
 
     <div id="app" class="container mt-5">
         <!-- Título -->
-        <h2 class="text-center mb-4">Sugerencia de cultivos interactiva por Geolocalización</h2>
+        <h2 class="text-center mb-0">Sugerencia de cultivos interactiva por Geolocalización</h2>
 
-        <!-- Botón para obtener la ubicación actual -->
-        <button class="btn btn-primary w-50" onclick="getWeatherByCurrentLocation()">Usar ubicación actual</button>
+        <!-- Botón para obtener la ubicación actual centrado -->
+        <div class="location-btn-container">
+            <button class="btn btn-primary" onclick="getWeatherByCurrentLocation()">Usar ubicación actual</button>
+        </div>
 
         <!-- Selector de tipo de suelo -->
         <div class="mt-4">
