@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Mapa Interactivo con Ventana Flotante Derecha</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <!-- Añadir CSS y JS de leaflet.markercluster -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster/dist/MarkerCluster.Default.css" />
+    <script src="https://unpkg.com/leaflet.markercluster/dist/leaflet.markercluster.js"></script>
+    <style>
+        #map {
+            height: 100vh; /* Altura del mapa */
+            width: 100vw; /* Ancho completo del mapa */
+        }
+
+        #infoWindow {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            width: 300px;
+            padding: 20px;
+            background-color: #f9f9f9; /* Fondo claro */
+            color: #333; /* Texto oscuro */
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+            display: none; /* Oculto por defecto */
+            z-index: 1000;
+        }
+
+        #closeInfoWindow {
+            position: absolute;
+            top: 5px;
+            right: 10px;
+            cursor: pointer;
+            font-weight: bold;
+            color: #333; /* Texto oscuro para el botón de cerrar */
+        }
+
+        #infoWindow img {
+            border-radius: 5px;
+            margin-top: 10px;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <div id="map"></div>
+
+    <div id="infoWindow">
+        <span id="closeInfoWindow">X</span>
+
+        <div id="stationImage">
+            <!-- Aquí se mostrará la imagen relevante, generada dinámicamente -->
+        </div>
+        <h2>DATOS</h2>
+        <div id="stationData">
+            <p>Haga clic en un marcador para ver los detalles de la estación</p>
+        </div>
+    </div>
+
+    <script>
+        // Inicializa el mapa centrado en México
+        const map = L.map('map').setView([23.634501, -102.552784], 5);
+
+        // Agrega la capa base de OpenStreetMap
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+
+        // Crear el grupo de marcadores con clustering
+        const markers = L.markerClusterGroup();
+
+        // API Key de Google Maps (reemplazar con tu propia clave)
+        const googleApiKey = "AIzaSyAisQGsJWnv7jwTOdwudU2RaMvR8OxB2zY";
+
+        // Carga los datos del archivo JSON
+        fetch('Estaciones_hidrometricas.json')
+            .then(response => response.json())
+            .then(data => {
+                data.forEach(station => {
+                    const { Clave, Estacion, Latitud, Longitud, Altitud, Estado, Municipio, RH, Cuenca } = station;
+
+                    // Añade un marcador al grupo de marcadores
+                    const marker = L.marker([Latitud, Longitud])
+                        .on('click', () => {
+                            // Mostrar la ventana flotante con la información de la estación
+                            document.getElementById('stationData').innerHTML = `
+                                <b>Clave:</b> ${Clave}<br>
+                                <b>Estación:</b> ${Estacion}<br>
+                                <b>Altitud:</b> ${Altitud} m<br>
+                                <b>Estado:</b> ${Estado}<br>
+                                <b>Municipio:</b> ${Municipio}<br>
+                                <b>R.H.:</b> ${RH}<br>
+                                <b>Cuenca:</b> ${Cuenca}
+                            `;
+
+                            // Integrar imagen de Google Street View basada en las coordenadas
+                            document.getElementById('stationImage').innerHTML = `
+                                <img src="https://maps.googleapis.com/maps/api/streetview?size=300x200&location=${Latitud},${Longitud}&key=${googleApiKey}" alt="Imagen de la estación">
+                            `;
+
+                            // Muestra la ventana flotante
+                            const infoWindow = document.getElementById('infoWindow');
+                            infoWindow.style.display = 'block';
+                        });
+
+                    markers.addLayer(marker);
+                });
+
+                // Añadir el grupo de marcadores con clustering al mapa
+                map.addLayer(markers);
+            })
+            .catch(error => console.error('Error cargando datos:', error));
+
+        // Función para cerrar la ventana flotante
+        document.getElementById('closeInfoWindow').onclick = function() {
+            document.getElementById('infoWindow').style.display = 'none';
+        }
+    </script>
+</body>
+</html>
