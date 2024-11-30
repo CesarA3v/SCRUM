@@ -65,19 +65,23 @@ function suggestCrops(temperature, humidity, soilType) {
     let suggestedCrops = [];
 
     // Calcular la tasa de éxito para cada cultivo basado en condiciones
-    const crops = [
-        { name: "Maíz", icon: "🌽", tempRange: [18, 30], humidityRange: [50, 80], soilType: "arcilloso", baseSuccess: 80 },
-        { name: "Tomate", icon: "🍅", tempRange: [20, 30], humidityRange: [60, 80], soilType: "arenoso", baseSuccess: 85 },
-        { name: "Frijol", icon: "🌱", tempRange: [20, 30], humidityRange: [50, 70], soilType: "limoso", baseSuccess: 75 },
-        { name: "Arroz", icon: "🍚", tempRange: [22, 35], humidityRange: [70, 90], soilType: "arcilloso", baseSuccess: 70 },
-        { name: "Lechuga", icon: "🥬", tempRange: [15, 22], humidityRange: [60, 80], soilType: "limoso", baseSuccess: 80 },
-        { name: "Cebolla", icon: "🧅", tempRange: [18, 25], humidityRange: [50, 70], soilType: "arenoso", baseSuccess: 70 },
-        { name: "Zanahoria", icon: "🥕", tempRange: [15, 22], humidityRange: [50, 60], soilType: "limoso", baseSuccess: 80 },
-        { name: "Espárragos", icon: "🌿", tempRange: [10, 20], humidityRange: [50, 70], soilType: "limoso", baseSuccess: 60 },
-        { name: "Pepino", icon: "🥒", tempRange: [22, 30], humidityRange: [60, 80], soilType: "arenoso", baseSuccess: 75 },
-        { name: "Acelgas", icon: "🌿", tempRange: [15, 25], humidityRange: [50, 70], soilType: "arcilloso", baseSuccess: 65 },
-        { name: "Berenjena", icon: "🍆", tempRange: [20, 30], humidityRange: [60, 80], soilType: "arenoso", baseSuccess: 70 }
-    ];
+    // Calcular la tasa de éxito para cada cultivo basado en condiciones
+const crops = [
+  { name: "Maíz", icon: "🌽", tempRange: [18, 30], humidityRange: [50, 80], soilType: "arcilloso", baseSuccess: 80 },
+  { name: "Tomate", icon: "🍅", tempRange: [20, 30], humidityRange: [60, 80], soilType: "arenoso", baseSuccess: 85 },
+  { name: "Frijol", icon: "🌱", tempRange: [20, 30], humidityRange: [50, 70], soilType: "limoso", baseSuccess: 75 },
+  { name: "Arroz", icon: "🍚", tempRange: [22, 35], humidityRange: [70, 90], soilType: "arcilloso", baseSuccess: 70 },
+  { name: "Lechuga", icon: "🥬", tempRange: [15, 22], humidityRange: [60, 80], soilType: "limoso", baseSuccess: 80 },
+  { name: "Cebolla", icon: "🧅", tempRange: [18, 25], humidityRange: [50, 70], soilType: "arenoso", baseSuccess: 70 },
+  { name: "Zanahoria", icon: "🥕", tempRange: [15, 22], humidityRange: [50, 60], soilType: "limoso", baseSuccess: 80 },
+  { name: "Espárragos", icon: "🌿", tempRange: [10, 20], humidityRange: [50, 70], soilType: "limoso", baseSuccess: 60 },
+  { name: "Pepino", icon: "🥒", tempRange: [22, 30], humidityRange: [60, 80], soilType: "arenoso", baseSuccess: 75 },
+  { name: "Acelgas", icon: "🌿", tempRange: [15, 25], humidityRange: [50, 70], soilType: "arcilloso", baseSuccess: 65 },
+  { name: "Berenjena", icon: "🍆", tempRange: [20, 30], humidityRange: [60, 80], soilType: "arenoso", baseSuccess: 70 },
+  // Agregar la manzana
+  { name: "Manzana", icon: "🍏", tempRange: [15, 25], humidityRange: [60, 80], soilType: "arcilloso", baseSuccess: 85 }
+];
+
 
     // Evaluar cada cultivo y su tasa de éxito
     crops.forEach(crop => {

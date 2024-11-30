@@ -13,7 +13,7 @@ var marker;
 
 // Función para obtener el clima por ciudad
 function getWeatherByCity(city) {
-    const url = `https://api.weatherapi.com/v1/forecast.json?key=${apiKey}&q=${city}&days=1&lang=es&hour=1`;  // Solicitar pronóstico de 1 día con datos por hora
+    const url = `https://api.weatherapi.com/v1/forecast.json?key=${apiKey}&q=${city}&days=30&lang=es&hour=1`;  // Solicitar pronóstico de 30 días con datos por hora
     fetchWeather(url);
 }
 
@@ -34,7 +34,7 @@ function getWeatherByCurrentLocation() {
                     marker = L.marker([lat, lon]).addTo(map);
                 }
 
-                const url = `https://api.weatherapi.com/v1/forecast.json?key=${apiKey}&q=${lat},${lon}&days=1&lang=es&hour=1`;  // Solicitar pronóstico de 1 día con datos por hora
+                const url = `https://api.weatherapi.com/v1/forecast.json?key=${apiKey}&q=${lat},${lon}&days=30&lang=es&hour=1`;  // Solicitar pronóstico de 30 días con datos por hora
 
                 fetchWeather(url);
             },
@@ -47,6 +47,20 @@ function getWeatherByCurrentLocation() {
     }
 }
 
+// Función para calcular el promedio de la temperatura de los últimos 30 días
+function calculateAvgTemp(forecastData) {
+    let totalTemp = 0;
+    let daysCount = forecastData.length;
+
+    // Sumar las temperaturas de cada día
+    forecastData.forEach(day => {
+        totalTemp += day.day.avgtemp_c; // Promedio diario
+    });
+
+    // Calcular el promedio de temperaturas
+    return (totalTemp / daysCount).toFixed(2);
+}
+
 // Función para realizar la solicitud y mostrar los resultados del clima
 function fetchWeather(url) {
     fetch(url)
@@ -55,48 +69,48 @@ function fetchWeather(url) {
             if (data.error) {
                 document.getElementById("weatherResult").innerHTML = `<p>No se pudo obtener el clima. Intenta de nuevo.</p>`;
             } else {
-                const forecast = data.forecast.forecastday[0];  // Accede al primer día del pronóstico
+                const forecast = data.forecast.forecastday;  // Accede a los datos de pronóstico de 30 días
                 const current = data.current;  // Datos actuales
                 const location = data.location;
+                
+                // Promedio de la temperatura de los últimos 30 días
+                const avgTemp = calculateAvgTemp(forecast);
                 
                 // Información del viento actual
                 const currentWind = current.wind_kph;  // Velocidad del viento actual en km/h
                 const currentWindDir = current.wind_dir;  // Dirección del viento
 
-                // Información por hora (obteniendo el viento en la hora actual)
-                const currentHour = data.forecast.forecastday[0].hour[0];  // Datos de la primera hora del pronóstico
-                const windHour = currentHour.wind_kph;  // Viento en km/h de esa hora
-                const windDirHour = currentHour.wind_dir;  // Dirección del viento de esa hora
-
                 // Mostrar la información actualizada en el HTML
                 document.getElementById("weatherResult").innerHTML = ` 
                     <h3>${location.name}, ${location.country}</h3>
-                    <p><strong>Última actualización:</strong> ${forecast.date}</p>
-                    <p><strong>Condición:</strong> ${forecast.day.condition.text}</p>
+                    <p><strong>Última actualización:</strong> ${forecast[0].date}</p>
+                    <p><strong>Condición:</strong> ${forecast[0].day.condition.text}</p>
                     
                     <!-- Temperatura actual -->
                     <p><strong>Temperatura actual:</strong> ${current.temp_c} °C (${current.temp_f} °F)</p>
 
+                    <!-- Temperatura promedio de los últimos 30 días -->
+                    <p><strong>Promedio de temperatura en los últimos 30 días:</strong> ${avgTemp} °C</p>
+
                     <!-- Temperaturas máxima y mínima -->
-                    <p><strong>Temperatura máxima:</strong> ${forecast.day.maxtemp_c} °C (${forecast.day.maxtemp_f} °F)</p>
-                    <p><strong>Temperatura mínima:</strong> ${forecast.day.mintemp_c} °C (${forecast.day.mintemp_f} °F)</p>
+                    <p><strong>Temperatura máxima:</strong> ${forecast[0].day.maxtemp_c} °C (${forecast[0].day.maxtemp_f} °F)</p>
+                    <p><strong>Temperatura mínima:</strong> ${forecast[0].day.mintemp_c} °C (${forecast[0].day.mintemp_f} °F)</p>
                     
                     <!-- Humedad -->
-                    <p><strong>Humedad promedio:</strong> ${forecast.day.avghumidity}%</p>
+                    <p><strong>Humedad promedio:</strong> ${forecast[0].day.avghumidity}%</p>
                     
                     <!-- Precipitación -->
-                    <p><strong>Precipitación total:</strong> ${forecast.day.totalprecip_mm} mm (${forecast.day.totalprecip_in} in)</p>
+                    <p><strong>Precipitación total:</strong> ${forecast[0].day.totalprecip_mm} mm (${forecast[0].day.totalprecip_in} in)</p>
                     
                     <!-- Otros detalles -->
-                    <p><strong>Viento máximo:</strong> ${forecast.day.maxwind_kph} km/h (${forecast.day.maxwind_mph} mph)</p>
-                    <p><strong>Visibilidad promedio:</strong> ${forecast.day.avgvis_km} km (${forecast.day.avgvis_miles} miles)</p>
-                    <p><strong>Índice UV:</strong> ${forecast.day.uv}</p>
-                    <p><strong>Probabilidad de lluvia:</strong> ${forecast.day.daily_chance_of_rain}%</p>
-                    <p><strong>Probabilidad de nieve:</strong> ${forecast.day.daily_chance_of_snow}%</p>
+                    <p><strong>Viento máximo:</strong> ${forecast[0].day.maxwind_kph} km/h (${forecast[0].day.maxwind_mph} mph)</p>
+                    <p><strong>Visibilidad promedio:</strong> ${forecast[0].day.avgvis_km} km (${forecast[0].day.avgvis_miles} miles)</p>
+                    <p><strong>Índice UV:</strong> ${forecast[0].day.uv}</p>
+                    <p><strong>Probabilidad de lluvia:</strong> ${forecast[0].day.daily_chance_of_rain}%</p>
+                    <p><strong>Probabilidad de nieve:</strong> ${forecast[0].day.daily_chance_of_snow}%</p>
 
-                    <!-- Viento actual y viento en la hora -->
+                    <!-- Viento actual -->
                     <p><strong>Viento actual:</strong> ${currentWind} km/h, Dirección: ${currentWindDir}</p>
-                    <p><strong>Viento en la hora actual:</strong> ${windHour} km/h, Dirección: ${windDirHour}</p>
                 `;
             }
         })
@@ -148,6 +162,6 @@ map.on('click', function(e) {
     }
 
     // Obtener el clima de la ubicación clickeada
-    const url = `https://api.weatherapi.com/v1/forecast.json?key=${apiKey}&q=${lat},${lon}&days=1&lang=es&hour=1`;  // Solicitar pronóstico de 1 día con datos por hora
+    const url = `https://api.weatherapi.com/v1/forecast.json?key=${apiKey}&q=${lat},${lon}&days=30&lang=es&hour=1`;  // Solicitar pronóstico de 30 días con datos por hora
     fetchWeather(url);
 });
