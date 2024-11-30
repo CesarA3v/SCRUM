@@ -5,10 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pronóstico de Nivel de Acuífero</title>
     <link rel="stylesheet" href="styles.css">
-    <!-- Cargar la librería Chart.js para los gráficos -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
+<!-- Agregar Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <header>
         <h1>Pronóstico de Nivel del Acuífero</h1>
@@ -28,7 +28,7 @@
             <input type="number" id="porcentajeLleno" value="20" placeholder="Ej. 50" required>
 
             <label for="diasPronostico">Número de días para el pronóstico:</label>
-            <input type="number" id="diasPronostico" value="14" required>
+            <input type="number" id="diasPronostico" value="7" required>
 
             <button type="submit">Calcular Pronóstico</button>
         </form>
@@ -37,21 +37,7 @@
     <section id="resultado">
         <h2>Pronóstico del Nivel del Acuífero</h2>
 
-        <!-- Tabla de resultados -->
-        <table id="tablaResultados">
-            <thead>
-                <tr>
-                    <th>Día</th>
-                    <th>Nivel Acuífero (mm)</th>
-                    <th>Cambio Diario (mm)</th>
-                </tr>
-            </thead>
-            <tbody>
-                <!-- Los resultados se insertarán aquí dinámicamente -->
-            </tbody>
-        </table>
-
-        <!-- Lista resumen -->
+        <!-- Lista resumen con pronósticos -->
         <ul id="listaPronostico">
             <!-- Los resultados de cada día se agregarán aquí -->
         </ul>
@@ -61,6 +47,7 @@
     </section>
 
     <!-- Enlace al archivo JavaScript -->
-    <script src="formula.js"></script>
+    <script src="app.js"></script>
+    
 </body>
 </html>

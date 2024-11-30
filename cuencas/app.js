@@ -43,16 +43,11 @@ function calcularNivelAguas(precipitacion, evaporacion, escorrentia, nivelActual
 // Función para diagnosticar la cantidad de agua en el acuífero
 function diagnosticarNivelAcuifero() {
     let nivelActual = capacidadAcuifero * (porcentajeLleno / 100); // Nivel inicial en mm
-    let resultadoHTML = `<h3>Pronóstico del Nivel del Acuífero</h3>`;
     const dias = [];
     const niveles = [];
-    const cambios = [];
-    const listaResumen = [];
 
-    // Limpiar la tabla antes de insertar los nuevos resultados
-    const tablaResultados = document.getElementById("tablaResultados");
+    // Limpiar la lista de pronósticos antes de insertar los nuevos resultados
     const listaPronostico = document.getElementById("listaPronostico");
-    tablaResultados.innerHTML = "";
     listaPronostico.innerHTML = "";
 
     for (let dia = 0; dia < diasPronosticados; dia++) {
@@ -70,40 +65,34 @@ function diagnosticarNivelAcuifero() {
         // Calcular el nuevo nivel del acuífero
         nivelActual = calcularNivelAguas(precipitacion, evaporacion, escorrentia, nivelActual, humedadMedia);
 
-        // Agregar los resultados para la tabla, gráfico y lista resumen
+        // Agregar los resultados para la lista de pronósticos
         dias.push(`Día ${dia + 1}`);
         niveles.push(nivelActual.toFixed(2));
-        cambios.push((precipitacion * eficienciaAbsorcion - (evaporacion + escorrentia)).toFixed(2));
-
-        // Tabla de resultados
-        const fila = document.createElement("tr");
-        fila.innerHTML = `
-            <td>Día ${dia + 1}</td>
-            <td>${nivelActual.toFixed(2)} mm</td>
-            <td>${(precipitacion * eficienciaAbsorcion - (evaporacion + escorrentia)).toFixed(2)} mm</td>
-        `;
-        tablaResultados.appendChild(fila);
 
         // Lista resumen
         const item = document.createElement("li");
-        item.textContent = `Día ${dia + 1}: Nivel estimado de agua es ${nivelActual.toFixed(2)} mm (Cambio: ${(precipitacion * eficienciaAbsorcion - (evaporacion + escorrentia)).toFixed(2)} mm)`;
+        item.textContent = `Día ${dia + 1}: Nivel estimado de agua es ${nivelActual.toFixed(2)} mm`;
         listaPronostico.appendChild(item);
     }
 
-    // Gráfico de evolución del nivel de acuífero
-    const ctx = document.getElementById('graficoPronostico').getContext('2d');
-    new Chart(ctx, {
-        type: 'line',
-        data: {
-            labels: dias,
-            datasets: [{
-                label: 'Nivel de Agua del Acuífero (mm)',
-                data: niveles,
-                borderColor: 'rgba(75, 192, 192, 1)',
-                fill: false
-            }]
-        }
-    });
+    // Verificar que hay datos antes de crear el gráfico
+    if (niveles.length > 0) {
+        const ctx = document.getElementById('graficoPronostico').getContext('2d');
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: dias,
+                datasets: [{
+                    label: 'Nivel de Agua del Acuífero (mm)',
+                    data: niveles,
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    fill: false
+                }]
+            }
+        });
+    } else {
+        console.error("No se han generado datos válidos para el gráfico.");
+    }
 }
 
 // Función para obtener los datos del clima
