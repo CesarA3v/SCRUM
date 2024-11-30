@@ -73,10 +73,10 @@
         const markers = L.markerClusterGroup();
 
         // API Key de Google Maps (reemplazar con tu propia clave)
-        const googleApiKey = "AIzaSyAisQGsJWnv7jwTOdwudU2RaMvR8OxB2zY";
+        const googleApiKey = "YOUR_API_KEY";
 
-        // Carga los datos del archivo JSON
-        fetch('Estaciones_hidrometricas.json')
+        // Carga los datos del archivo JSON desde GitHub Raw
+        fetch('https://raw.githubusercontent.com/CesarA3v/SCRUM/main/Estaciones_hidrometricas.json')
             .then(response => response.json())
             .then(data => {
                 data.forEach(station => {
