@@ -1,7 +1,7 @@
 const apiKey = "02ba7131593e4ca693044700243011";  // Tu clave API de WeatherAPI
 
 // Inicializar el mapa con Leaflet.js
-var map = L.map('map').setView([19.4326, -99.1332], 13);  // Iniciar en Ciudad de México por defecto
+var map = L.map('map').setView([28.6322, -106.0794], 13);  // Iniciar en Chihuahua por defecto
 
 // Agregar capa de mapa
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
