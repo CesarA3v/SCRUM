@@ -1,102 +1,117 @@
 <!DOCTYPE html>
 <html lang="es">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Clima en Chihuahua</title>
-<style>
-body {
-font-family: Arial, sans-serif;
-margin: 20px;
-background-color: #f0f0f0;
-}
-#app {
-max-width: 400px;
-margin: 0 auto;
-background-color: white;
-padding: 20px;
-border-radius: 10px;
-box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-}
-h1 {
-text-align: center;
-}
-input, button {
-width: 100%;
-padding: 10px;
-margin: 10px 0;
-border: 1px solid #ccc;
-border-radius: 5px;
-}
-.result {
-margin-top: 20px;
-}
-.result p {
-margin: 5px 0;
-}
-</style>
-</head>
-<body>
-<div id="app">
-<h1>Consulta del Clima</h1>
-<input type="text" id="city" placeholder="Ingresa una ciudad de Chihuahua">
-<button onclick="getWeather()">Obtener Clima</button>
-        <button onclick="getWeatherByLocation()">Usar mi Ubicación</button>
-
-<div class="result" id="weatherResult"></div>
-</div>
-
-<script>
-const apiKey = '02ba7131593e4ca693044700243011'; // Sustituye con tu clave API de WeatherAPI
-        
-
-        // Función para obtener el clima por ciudad
-function getWeather() {
-const city = document.getElementById("city").value;
-if (!city) {
-alert("Por favor ingresa una ciudad.");
-return;
-}
-
-const url = `https://api.weatherapi.com/v1/current.json?key=${apiKey}&q=${city},MX&lang=es`;
-
-            fetchWeather(url);
-        }
-
-        // Función para obtener el clima por ubicación
-        function getWeatherByLocation() {
-            if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(
-                    (position) => {
-                        const lat = position.coords.latitude;
-                        const lon = position.coords.longitude;
-
-                        const url = `https://api.weatherapi.com/v1/current.json?key=${apiKey}&q=${lat},${lon}&lang=es`;
-
-                        fetchWeather(url);
-                    },
-                    (error) => {
-                        alert("No se pudo obtener tu ubicación. Asegúrate de que la geolocalización está habilitada.");
-                    }
-                );
-            } else {
-                alert("Tu navegador no soporta geolocalización.");
+    <head>
+        <meta charset="UTF-8" />
+        <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1.0" />
+        <title>Clima en Chihuahua</title>
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+                margin: 20px;
+                background-color: #f0f0f0;
             }
-        }
+            #app {
+                max-width: 400px;
+                margin: 0 auto;
+                background-color: white;
+                padding: 20px;
+                border-radius: 10px;
+                box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            }
+            h1 {
+                text-align: center;
+            }
+            input,
+            button {
+                width: 100%;
+                padding: 10px;
+                margin: 10px 0;
+                border: 1px solid #ccc;
+                border-radius: 5px;
+            }
+            .result {
+                margin-top: 20px;
+            }
+            .result p {
+                margin: 5px 0;
+            }
+        </style>
+    </head>
+    <body>
+        <div id="app">
+            <h1>Consulta del Clima</h1>
+            <input
+                type="text"
+                id="city"
+                placeholder="Ingresa una ciudad de Chihuahua" />
+            <button onclick="getWeather()">Obtener Clima</button>
+            <button onclick="getWeatherByLocation()">Usar mi Ubicación</button>
 
-        // Función para realizar la consulta a WeatherAPI
-        function fetchWeather(url) {
-fetch(url)
-.then(response => response.json())
-.then(data => {
-if (data.error) {
-                        document.getElementById("weatherResult").innerHTML = `<p>No se encontró la ciudad. Intenta de nuevo.</p>`;
-                        document.getElementById("weatherResult").innerHTML = `<p>No se pudo obtener el clima. Intenta de nuevo.</p>`;
-} else {
-const weather = data.current;
-                        const location = data.location;
+            <div
+                class="result"
+                id="weatherResult"></div>
+        </div>
 
-document.getElementById("weatherResult").innerHTML = `
+        <script>
+            const apiKey = "02ba7131593e4ca693044700243011"; // Sustituye con tu clave API de WeatherAPI
+
+            // Función para obtener el clima por ciudad
+            function getWeather() {
+                const city = document.getElementById("city").value;
+                if (!city) {
+                    alert("Por favor ingresa una ciudad.");
+                    return;
+                }
+
+                const url = `https://api.weatherapi.com/v1/current.json?key=${apiKey}&q=${city},MX&lang=es`;
+
+                fetchWeather(url);
+            }
+
+            // Función para obtener el clima por ubicación
+            function getWeatherByLocation() {
+                if (navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition(
+                        (position) => {
+                            const lat = position.coords.latitude;
+                            const lon = position.coords.longitude;
+
+                            const url = `https://api.weatherapi.com/v1/current.json?key=${apiKey}&q=${lat},${lon}&lang=es`;
+
+                            fetchWeather(url);
+                        },
+                        (error) => {
+                            alert(
+                                "No se pudo obtener tu ubicación. Asegúrate de que la geolocalización está habilitada."
+                            );
+                        }
+                    );
+                } else {
+                    alert("Tu navegador no soporta geolocalización.");
+                }
+            }
+
+            // Función para realizar la consulta a WeatherAPI
+            function fetchWeather(url) {
+                fetch(url)
+                    .then((response) => response.json())
+                    .then((data) => {
+                        if (data.error) {
+                            document.getElementById(
+                                "weatherResult"
+                            ).innerHTML = `<p>No se encontró la ciudad. Intenta de nuevo.</p>`;
+                            document.getElementById(
+                                "weatherResult"
+                            ).innerHTML = `<p>No se pudo obtener el clima. Intenta de nuevo.</p>`;
+                        } else {
+                            const weather = data.current;
+                            const location = data.location;
+
+                            document.getElementById(
+                                "weatherResult"
+                            ).innerHTML = `
                             <h3>${data.location.name}, ${data.location.country}</h3>
                             <h3>Ubicación: ${location.name}, ${location.region}, ${location.country}</h3>
                            <p><strong>Condición:</strong> ${weather.condition.text}</p>
@@ -105,12 +120,14 @@ document.getElementById("weatherResult").innerHTML = `
                            <p><strong>Viento:</strong> ${weather.wind_kph} km/h</p>
                             <p><strong>Última Actualización:</strong> ${location.localtime}</p>
                        `;
-}
-})
-.catch(err => {
-document.getElementById("weatherResult").innerHTML = `<p>Hubo un error al obtener los datos. Intenta de nuevo más tarde.</p>`;
-});
-}
-</script>
-</body>
+                        }
+                    })
+                    .catch((err) => {
+                        document.getElementById(
+                            "weatherResult"
+                        ).innerHTML = `<p>Hubo un error al obtener los datos. Intenta de nuevo más tarde.</p>`;
+                    });
+            }
+        </script>
+    </body>
 </html>
