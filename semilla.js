@@ -8,10 +8,14 @@ function getWeatherByCurrentLocation() {
                 const lat = position.coords.latitude;
                 const lon = position.coords.longitude;
 
-                // Mostrar el contenedor de datos del clima mientras se cargan
+                // Hacer visible el contenedor de datos del clima mientras se cargan
                 document.getElementById("weatherResult").style.display = 'block';  // Hacer visible el div de clima
                 document.getElementById("weatherResult").innerHTML = `<p>Cargando datos...</p>`;
-                
+
+                // Ocultar el div de sugerencias de cultivos hasta que se muestren los datos
+                document.getElementById("cropSuggestions").style.display = 'none';
+                document.getElementById("cropSuggestions").innerHTML = ''; // Limpiar sugerencias previas
+
                 const url = `https://api.weatherapi.com/v1/forecast.json?key=${apiKey}&q=${lat},${lon}&days=1&lang=es`;
                 fetchWeather(url);  // Llamar a la función que obtiene el clima
             },
@@ -36,7 +40,7 @@ function fetchWeather(url) {
                 const current = data.current;
                 const location = data.location;
 
-                // Mostrar datos del clima
+                // Mostrar los datos del clima
                 document.getElementById("weatherResult").innerHTML = `
                     <h3>${location.name}, ${location.country}</h3>
                     <p><strong>Última actualización:</strong> ${forecast.date}</p>
@@ -44,6 +48,7 @@ function fetchWeather(url) {
                     <p><strong>Temperatura actual:</strong> ${current.temp_c} °C (${current.temp_f} °F)</p>
                     <p><strong>Humedad:</strong> ${forecast.day.avghumidity}%</p>
                 `;
+
                 // Hacer visible el contenedor de sugerencias de cultivos
                 document.getElementById("cropSuggestions").style.display = 'block'; 
                 suggestCrops(current.temp_c, forecast.day.avghumidity, document.getElementById("soilType").value);
@@ -102,20 +107,33 @@ function displayCropSuggestions(crops) {
     // Mostrar cada cultivo y su tasa de éxito
     crops.forEach(crop => {
         const cropElement = document.createElement("li");
+        const successRate = crop.successRate;
+
+        let color = getColorForSuccess(successRate);
+
         cropElement.innerHTML = `
             <div class="d-flex align-items-center">
                 <div class="crop-icon">${crop.name[0]}</div>
                 <div class="flex-grow-1">
                     <span class="crop-name">${crop.name}</span>
-                    <div class="success-rate">Tasa de éxito: ${crop.successRate.toFixed(2)}%</div>
+                    <div class="success-rate">Tasa de éxito: ${successRate.toFixed(2)}%</div>
                     <div class="success-bar">
-                        <div class="success-fill" style="width: ${crop.successRate}%; background-color: ${crop.successRate > 70 ? 'green' : crop.successRate > 40 ? 'orange' : 'red'};"></div>
+                        <div class="success-fill" style="width: ${successRate}%; background-color: ${color};"></div>
                     </div>
                 </div>
             </div>
         `;
         cropSuggestionsDiv.appendChild(cropElement);
     });
+}
+
+// Función para obtener el color correspondiente a la tasa de éxito
+function getColorForSuccess(successRate) {
+    if (successRate >= 90) return "#2C6B2F";        // Verde oscuro (90-100%)
+    if (successRate >= 70) return "#4CAF50";        // Verde brillante (70-89%)
+    if (successRate >= 50) return "#FFB300";        // Amarillo dorado (50-69%)
+    if (successRate >= 30) return "#FF5722";        // Naranja fuerte (30-49%)
+    return "#D32F2F";                               // Rojo oscuro (0-29%)
 }
 
 // Función para calcular la tasa de éxito de la temperatura para cada cultivo
