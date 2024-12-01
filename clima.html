@@ -16,32 +16,32 @@
 </head>
 <body>
 
-    <header>
-        <div class="container text-center">
-            <h1 class="display-5">Consulta del Clima</h1>
-            <p class="lead">Obtén información del clima de cualquier ciudad o tu ubicación actual.</p>
-        </div>
-    </header>
-
     <div id="app" class="container">
-        <h2 class="text-center mb-4">Climatología con Mapa Interactivo</h2>
+        <h1 class="text-center mb-4">Climatología con Mapa Interactivo</h1>
 
+        <!-- Campo de búsqueda para ciudad -->
         <div class="input-group mb-4">
             <input type="text" id="cityInput" class="form-control" placeholder="Ingresa una ciudad" />
-            <button class="btn btn-primary" onclick="getWeatherByCurrentLocation()">Usar ubicación actual</button>
         </div>
 
-        <div id="map"></div>
+        <!-- Botón para usar ubicación actual -->
+        <button class="btn" onclick="getWeatherByCurrentLocation()">Usar ubicación actual</button>
+
+        <!-- Mapa interactivo -->
+        <div id="map" style="height: 400px;"></div>
+        
+        <!-- Resultado del clima -->
         <div class="result mt-4" id="weatherResult"></div>
     </div>
 
+    <!-- Pie de página -->
     <footer>
         <div class="container text-center">
             <p>&copy; 2024 Consulta del Clima. Todos los derechos reservados.</p>
         </div>
     </footer>
 
+    <!-- Script para la lógica de la página -->
     <script src="clima.js"></script>
-
 </body>
 </html>
