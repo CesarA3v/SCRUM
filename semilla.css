@@ -4,9 +4,8 @@ body {
   padding: 0;
   background-color: #f4f7fc;
   display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
+  flex-direction: column;
+  align-items: center; /* Centrar horizontalmente */
 }
 .crop-element {
   position: relative;
@@ -177,7 +176,6 @@ button:hover {
   max-width: 500px;
   margin: 20px auto;
   font-size: 16px;
-  margin-bottom: -110px;  /* Aumentar el margen para bajar más la información */
 
 }
 
@@ -210,7 +208,6 @@ button:hover {
   border-radius: 8px;
   margin-bottom: 20px;
   font-family: 'Roboto', sans-serif;
-  margin-top: 450px;  /* Ajusta la posición a 20px desde la parte superior */
 }
 
 
