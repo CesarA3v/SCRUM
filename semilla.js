@@ -86,7 +86,7 @@ function suggestCrops(temperature, humidity, soilType) {
 
         // Solo agregar cultivos con tasa de éxito mayor a 30% para mantener la relevancia
         if (cropSuccess >= 30) {
-            suggestedCrops.push({ name: crop.name, successRate: cropSuccess, icon: crop.icon, explanation: getExplanation(cropSuccess, tempSuccess, humiditySuccess, soilSuccess) });
+            suggestedCrops.push({ name: crop.name, successRate: cropSuccess, icon: crop.icon });
         }
     });
 
@@ -110,7 +110,7 @@ function displayCropSuggestions(crops) {
         let color = getColorForSuccess(successRate);
 
         cropElement.innerHTML = `
-            <div class="d-flex align-items-center" onclick="showExplanation('${crop.name}')">
+            <div class="d-flex align-items-center">
                 <div class="crop-icon">${crop.icon}</div>
                 <div class="flex-grow-1">
                     <span class="crop-name">${crop.name}</span>
@@ -123,31 +123,6 @@ function displayCropSuggestions(crops) {
         `;
         cropSuggestionsDiv.appendChild(cropElement);
     });
-}
-
-// Función para mostrar la explicación al hacer clic en un cultivo
-function showExplanation(cropName) {
-    const crop = crops.find(c => c.name === cropName);
-    const explanationText = document.getElementById("explanationText");
-    explanationText.innerHTML = crop.explanation;
-    
-    document.getElementById("cropExplanation").style.display = 'block';  // Mostrar la explicación
-}
-
-// Función para obtener la explicación del cultivo
-function getExplanation(cropSuccess, tempSuccess, humiditySuccess, soilSuccess) {
-    let explanation = "Este cultivo tiene una tasa de éxito de " + cropSuccess.toFixed(2) + "%.";
-
-    // Explicación de la tasa de éxito
-    if (cropSuccess >= 80) {
-        explanation += " Es un excelente cultivo para las condiciones actuales.";
-    } else if (cropSuccess >= 50) {
-        explanation += " Es un cultivo adecuado, aunque no ideal.";
-    } else {
-        explanation += " No es el mejor cultivo para estas condiciones.";
-    }
-
-    return explanation;
 }
 
 // Función para obtener el color correspondiente a la tasa de éxito

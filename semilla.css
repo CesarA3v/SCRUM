@@ -64,7 +64,7 @@
 .location-btn-container {
   display: flex;
   justify-content: center;  /* Centra horizontalmente */
-  margin-top: 10vh;          /* Reducir el margen superior para acercar el botón al título */
+  margin-top: 2vh;          /* Reducir el margen superior para acercar el botón al título */
 }
 
 .btn {
