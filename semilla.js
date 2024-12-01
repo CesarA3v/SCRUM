@@ -212,37 +212,38 @@ function displayCropSuggestions(crops) {
         let color = getColorForSuccess(successRate);
         
         cropElement.innerHTML = `
-            <div class="d-flex align-items-center" id="miDiv">
-                <div class="crop-icon">${crop.icon}</div>
-                <div class="flex-grow-1">
-                    <span class="crop-name">${crop.name}</span>
-                    <div class="success-rate">Tasa de éxito: ${successRate.toFixed(2)}%</div>
-                    <div class="success-bar">
-                        <div class="success-fill" style="width: ${successRate}%; background-color: ${color};"></div>
-                    </div>
-                    <div class="success-rate">Margen de Ganancia: ${margenGanancia.toFixed(2)}%</div>
-                    <div class="success-bar">
-                        <div class="success-fill" style="width: ${margenGanancia}%; background-color: ${color};"></div>
-                    </div>
-                </div>
+    <div class="d-flex align-items-center" id="miDiv" style="margin-top: -20px;">
+        <div class="crop-icon">${crop.icon}</div>
+        <div class="flex-grow-1">
+            <span class="crop-name">${crop.name}</span>
+            <div class="success-rate">Tasa de éxito: ${successRate.toFixed(2)}%</div>
+            <div class="success-bar">
+                <div class="success-fill" style="width: ${successRate}%; background-color: ${color};"></div>
             </div>
-            <div class="crop-details" style="display: none; padding: 10px; background-color: #f8f9fa; border-radius: 5px; margin-top: 10px;">
-                <h5>Detalles del Cultivo</h5>
-                <p><strong>Descripción:</strong> ${cropDescriptions[crop.name].description}</p>
-                <div class="row">
-                    <div class="col-md-6">
-                        <h6>Beneficios</h6>
-                        <ul>
-                            ${cropDescriptions[crop.name].benefits.map(benefit => `<li>${benefit}</li>`).join('')}
-                        </ul>
-                    </div>
-                    <div class="col-md-6">
-                        <h6>Consejos de Cultivo</h6>
-                        <p>${cropDescriptions[crop.name].challengeTips}</p>
-                    </div>
-                </div>
+            <div class="success-rate">Margen de Ganancia: ${margenGanancia.toFixed(2)}%</div>
+            <div class="success-bar">
+                <div class="success-fill" style="width: ${margenGanancia}%; background-color: ${color};"></div>
             </div>
-        `;
+        </div>
+    </div>
+    <div class="crop-details" style="display: none; padding: 10px; background-color: #f8f9fa; border-radius: 5px; margin-top: 10px;">
+        <h5>Detalles del Cultivo</h5>
+        <p><strong>Descripción:</strong> ${cropDescriptions[crop.name].description}</p>
+        <div class="row">
+            <div class="col-md-6">
+                <h6>Beneficios</h6>
+                <ul>
+                    ${cropDescriptions[crop.name].benefits.map(benefit => `<li>${benefit}</li>`).join('')}
+                </ul>
+            </div>
+            <div class="col-md-6">
+                <h6>Consejos de Cultivo</h6>
+                <p>${cropDescriptions[crop.name].challengeTips}</p>
+            </div>
+        </div>
+    </div>
+`;
+
         
         cropElement.addEventListener('click', function() {
             const detailsDiv = this.querySelector('.crop-details');
