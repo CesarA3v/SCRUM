@@ -76,25 +76,26 @@ const cropDescriptions = {
 
 const apiKey = "02ba7131593e4ca693044700243011";  // Tu clave API de WeatherAPI
 
-function calculateAvgTemp(forecastData) {
-  let totalTemp = 0;
-  let daysCount = forecastData.length;
-
-  // Sumar las temperaturas de cada día
-  forecastData.forEach(day => {
-      totalTemp += day.day.avgtemp_c; // Promedio diario
-  });
-
-  // Calcular el promedio de temperaturas
-  return (totalTemp / daysCount).toFixed(2);
+// Función auxiliar para habilitar/deshabilitar el botón
+function toggleButton(state) {
+    const locationButton = document.querySelector(".btn");
+    locationButton.innerHTML = state ? "Cargando..." : "Calcular";
+    locationButton.disabled = state;
 }
 
-// Función para obtener el clima por ubicación actual
+function calculateAvgTemp(forecastData) {
+    let totalTemp = 0;
+    let daysCount = forecastData.length;
+
+    forecastData.forEach(day => {
+        totalTemp += day.day.avgtemp_c; // Promedio diario
+    });
+
+    return (totalTemp / daysCount).toFixed(2);
+}
+
 function getWeatherByCurrentLocation() {
-    // Cambiar el texto del botón a "Cargando..." y deshabilitarlo mientras se obtiene la ubicación
-    const locationButton = document.querySelector(".btn");
-    locationButton.innerHTML = "Cargando...";
-    locationButton.disabled = true;
+    toggleButton(true);  // Deshabilitar el botón mientras se obtiene la ubicación
 
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(
@@ -102,61 +103,46 @@ function getWeatherByCurrentLocation() {
                 const lat = position.coords.latitude;
                 const lon = position.coords.longitude;
 
-                // Hacer visible el contenedor de datos del clima mientras se cargan
-                document.getElementById("weatherResult").style.display = 'block';  // Hacer visible el div de clima
+                // Mostrar indicador de carga
+                document.getElementById("weatherResult").style.display = 'block';
                 document.getElementById("weatherResult").innerHTML = `
                     <div class="spinner-border" role="status">
                         <span class="sr-only">Cargando...</span>
                     </div>
                     <p>Cargando datos...</p>
                 `;
-
-                // Ocultar el div de sugerencias de cultivos hasta que se muestren los datos
                 document.getElementById("cropSuggestions").style.display = 'none';
-                document.getElementById("cropSuggestions").innerHTML = ''; // Limpiar sugerencias previas
+                document.getElementById("cropSuggestions").innerHTML = '';
 
                 const url = `https://api.weatherapi.com/v1/forecast.json?key=${apiKey}&q=${lat},${lon}&days=1&lang=es`;
-                fetchWeather(url);  // Llamar a la función que obtiene el clima
+                fetchWeather(url);
             },
             (error) => {
                 alert("No se pudo obtener tu ubicación. Asegúrate de que la geolocalización está habilitada.");
-
-                // Restaurar el estado del botón en caso de error
-                const locationButton = document.querySelector(".btn");
-                locationButton.innerHTML = "Calcular";
-                locationButton.disabled = false;
+                toggleButton(false);
             }
         );
     } else {
         alert("Tu navegador no soporta geolocalización.");
-
-        // Restaurar el estado del botón en caso de que la geolocalización no sea soportada
-        const locationButton = document.querySelector(".btn");
-        locationButton.innerHTML = "Calcular";
-        locationButton.disabled = false;
+        toggleButton(false);
     }
 }
 
-// Función para realizar la solicitud y mostrar los resultados del clima
 function fetchWeather(url) {
     fetch(url)
         .then(response => response.json())
         .then(data => {
-            // Restaurar el estado del botón después de la solicitud
-            const locationButton = document.querySelector(".btn");
-            locationButton.innerHTML = "Calcular";
-            locationButton.disabled = false;
+            toggleButton(false);
 
             if (data.error) {
                 document.getElementById("weatherResult").innerHTML = `<p>No se pudo obtener el clima. Intenta de nuevo.</p>`;
             } else {
-                const forecast = data.forecast.forecastday[0];  // Accede al primer día del pronóstico
+                const forecast = data.forecast.forecastday[0];
                 const current = data.current;
                 const location = data.location;
-                const joni = data.forecast.forecastday;  // Accede a los datos de pronóstico de 30 días
+                const joni = data.forecast.forecastday;
                 const avgtemp = calculateAvgTemp(joni);
 
-                // Mostrar los datos del clima
                 document.getElementById("weatherResult").innerHTML = `
                     <h3>${location.name}, ${location.country}</h3>
                     <p><strong>Última actualización:</strong> ${forecast.date}</p>
@@ -166,67 +152,62 @@ function fetchWeather(url) {
                     <p><strong>Humedad:</strong> ${forecast.day.avghumidity}%</p>
                 `;
 
-                // Hacer visible el contenedor de sugerencias de cultivos
                 document.getElementById("cropSuggestions").style.display = 'block'; 
                 suggestCrops(avgtemp, forecast.day.avghumidity, document.getElementById("soilType").value);
             }
         })
         .catch((err) => {
-            // Restaurar el estado del botón después de la solicitud
-            const locationButton = document.querySelector(".btn");
-            locationButton.innerHTML = "Calcular";
-            locationButton.disabled = false;
-
+            toggleButton(false);
             document.getElementById("weatherResult").innerHTML = `<p>Hubo un error al obtener los datos. Intenta de nuevo más tarde.</p>`;
             console.error(err);
         });
 }
 
-// Función para sugerir cultivos según el clima y tipo de suelo
 function suggestCrops(temperature, humidity, soilType) {
     let suggestedCrops = [];
 
-    // Definir los cultivos comunes en Chihuahua con parámetros más realistas
     const crops = [
-        { name: "Trigo", icon: "🌾", tempRange: [10, 25], humidityRange: [50, 70], soilType: "arcilloso", baseSuccess: 90 },
-        { name: "Algodón", icon: "🌿", tempRange: [20, 35], humidityRange: [40, 60], soilType: "arenoso", baseSuccess: 80 },
-        { name: "Alfalfa", icon: "🌱", tempRange: [15, 30], humidityRange: [40, 70], soilType: "limoso", baseSuccess: 85 },
-        { name: "Nuez", icon: "🌰", tempRange: [10, 25], humidityRange: [60, 80], soilType: "arcilloso", baseSuccess: 75 },
-        { name: "Jalapeño", icon: "🌶️", tempRange: [20, 35], humidityRange: [50, 70], soilType: "arenoso", baseSuccess: 85 },
-        { name: "Avena", icon: "🌾", tempRange: [10, 20], humidityRange: [60, 80], soilType: "limoso", baseSuccess: 90 },
-        { name: "Cacahuate", icon: "🥜", tempRange: [20, 30], humidityRange: [50, 70], soilType: "arenoso", baseSuccess: 80 },
-        { name: "Manzana Roja", icon: "🍎", tempRange: [15, 25], humidityRange: [60, 80], soilType: "arcilloso", baseSuccess: 85 }
+        { name: "Trigo", icon: "🌾", tempRange: [10, 25], humidityRange: [50, 70], soilType: "arcilloso", baseSuccess: 90, costo: 10, precio:20 },
+        { name: "Algodón", icon: "🌿", tempRange: [20, 35], humidityRange: [40, 60], soilType: "arenoso", baseSuccess: 80, costo: 10, precio:21},
+        { name: "Alfalfa", icon: "🌱", tempRange: [15, 30], humidityRange: [40, 70], soilType: "limoso", baseSuccess: 85, costo: 10, precio:22},
+        { name: "Nuez", icon: "🌰", tempRange: [10, 25], humidityRange: [60, 80], soilType: "arcilloso", baseSuccess: 75, costo: 13, precio:23},
+        { name: "Jalapeño", icon: "🌶️", tempRange: [20, 35], humidityRange: [50, 70], soilType: "arenoso", baseSuccess: 85, costo: 14, precio:24},
+        { name: "Avena", icon: "🌾", tempRange: [10, 20], humidityRange: [60, 80], soilType: "limoso", baseSuccess: 90, costo: 15, precio:25},
+        { name: "Cacahuate", icon: "🥜", tempRange: [20, 30], humidityRange: [50, 70], soilType: "arenoso", baseSuccess: 80, costo: 16, precio:26},
+        { name: "Manzana Roja", icon: "🍎", tempRange: [15, 25], humidityRange: [60, 80], soilType: "arcilloso", baseSuccess: 85, costo: 17, precio:27}
     ];
 
-    // Evaluar cada cultivo y su tasa de éxito
     crops.forEach(crop => {
         const tempSuccess = calculateTemperatureSuccess(temperature, crop.tempRange);
         const humiditySuccess = calculateHumiditySuccess(humidity, crop.humidityRange);
         const soilSuccess = calculateSoilSuccess(soilType, crop.soilType);
+        
+        let Margen = 0;
+        if (crop.precio > 0) {
+            Margen = ((crop.precio - crop.costo) / crop.precio) * 100;
+        }
 
         const cropSuccess = (tempSuccess + humiditySuccess + soilSuccess) / 3;
 
-        // Solo agregar cultivos con tasa de éxito mayor a 30% para mantener la relevancia
         if (cropSuccess >= 30) {
-            suggestedCrops.push({ name: crop.name, successRate: cropSuccess, icon: crop.icon });
+            suggestedCrops.push({ name: crop.name, successRate: cropSuccess, icon: crop.icon, MargenGanancia: Margen });
         }
     });
 
-    // Ordenar los cultivos por tasa de éxito de mayor a menor
     suggestedCrops.sort((a, b) => b.successRate - a.successRate);
 
     displayCropSuggestions(suggestedCrops);
 }
 
-// Función para mostrar las sugerencias de cultivos
 function displayCropSuggestions(crops) {
     const cropSuggestionsDiv = document.getElementById("cropSuggestions");
-    cropSuggestionsDiv.innerHTML = "";  // Limpiar las sugerencias anteriores
+    cropSuggestionsDiv.innerHTML = "";  
     
     crops.forEach(crop => {
         const cropElement = document.createElement("li");
-        cropElement.classList.add("crop-element");  // Agregar la clase para el borde dinámico
+        cropElement.classList.add("crop-element");  
 
+        const margenGanancia = crop.MargenGanancia;
         const successRate = crop.successRate;
         let color = getColorForSuccess(successRate);
         
@@ -238,6 +219,10 @@ function displayCropSuggestions(crops) {
                     <div class="success-rate">Tasa de éxito: ${successRate.toFixed(2)}%</div>
                     <div class="success-bar">
                         <div class="success-fill" style="width: ${successRate}%; background-color: ${color};"></div>
+                    </div>
+                    <div class="success-rate">Margen de Ganancia: ${margenGanancia.toFixed(2)}%</div>
+                    <div class="success-bar">
+                        <div class="success-fill" style="width: ${margenGanancia}%; background-color: ${color};"></div>
                     </div>
                 </div>
             </div>
@@ -259,7 +244,6 @@ function displayCropSuggestions(crops) {
             </div>
         `;
         
-        // Add click event to toggle details
         cropElement.addEventListener('click', function() {
             const detailsDiv = this.querySelector('.crop-details');
             detailsDiv.style.display = detailsDiv.style.display === 'none' ? 'block' : 'none';
@@ -269,35 +253,30 @@ function displayCropSuggestions(crops) {
     });
 }
 
-
-// Función para obtener el color correspondiente a la tasa de éxito
 function getColorForSuccess(successRate) {
-    if (successRate >= 90) return "#2C6B2F";        // Verde oscuro (90-100%)
-    if (successRate >= 70) return "#4CAF50";        // Verde brillante (70-89%)
-    if (successRate >= 50) return "#FFB300";        // Amarillo dorado (50-69%)
-    if (successRate >= 30) return "#FF5722";        // Naranja fuerte (30-49%)
-    return "#D32F2F";                               // Rojo oscuro (0-29%)
+    if (successRate >= 90) return "#2C6B2F";
+    if (successRate >= 70) return "#4CAF50";
+    if (successRate >= 50) return "#FFB300";
+    if (successRate >= 30) return "#FF5722";
+    return "#D32F2F";
 }
 
-// Función para calcular la tasa de éxito de la temperatura para cada cultivo
 function calculateTemperatureSuccess(temperature, tempRange) {
-    const diff = Math.abs(temperature - (tempRange[0] + tempRange[1]) / 2);  // Desviación de la temperatura media
+    const diff = Math.abs(temperature - (tempRange[0] + tempRange[1]) / 2);
     if (diff <= 5) return 100;
     if (diff <= 10) return 80;
     if (diff <= 15) return 60;
-    return 40;  // Baja tasa de éxito si la desviación es muy grande
+    return 40;
 }
 
-// Función para calcular la tasa de éxito de la humedad para cada cultivo
 function calculateHumiditySuccess(humidity, humidityRange) {
-    const diff = Math.abs(humidity - (humidityRange[0] + humidityRange[1]) / 2);  // Desviación de la humedad media
+    const diff = Math.abs(humidity - (humidityRange[0] + humidityRange[1]) / 2);
     if (diff <= 5) return 100;
     if (diff <= 10) return 75;
     if (diff <= 15) return 50;
-    return 30;  // Baja tasa de éxito si la desviación es muy grande
+    return 30;
 }
 
-// Función para calcular la tasa de éxito de acuerdo con el tipo de suelo
 function calculateSoilSuccess(soilType, cropSoilType) {
-    return soilType === cropSoilType ? 100 : 50;  // 100% si el tipo de suelo coincide, 50% si no
+    return soilType === cropSoilType ? 100 : 50;
 }
