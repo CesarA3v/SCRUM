@@ -21,8 +21,8 @@ body {
     display: flex;
     width: 100%;
     height: 100%;
-    background-color: rgba(255, 255, 255, 0.7);
-    box-shadow: 0 8px 16px rgba(255, 255, 255, 0.8);
+    background-color: rgb(255, 255, 255);
+    box-shadow: 0 8px 16px rgb(255, 255, 255);
     border-radius: 15px;
     position: relative;
 }
@@ -56,8 +56,6 @@ body {
 
 .middle_sidebar button {
     background-color: rgb(255, 255, 255);
-    border: 2px solid #1a104f;
-    color: rgb(46, 25, 91);
     padding: 10px 15px;
     margin-bottom: 16px;
     width: 100%;
@@ -70,7 +68,7 @@ body {
 }
 
 .middle_sidebar button:hover {
-    background-color: rgba(185, 186, 226, 0.9);
+    background-color: rgba(220, 220, 220, 0.9);
 }
 
 .content {

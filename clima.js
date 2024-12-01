@@ -112,10 +112,12 @@ function fetchWeather(url) {
                     <!-- Viento actual -->
                     <p><strong>Viento actual:</strong> ${currentWind} km/h, Dirección: ${currentWindDir}</p>
                 `;
+                document.getElementById("weatherResult").style.display = "block"; // Mostrar la sección de resultados
             }
         })
         .catch((err) => {
             document.getElementById("weatherResult").innerHTML = `<p>Hubo un error al obtener los datos. Intenta de nuevo más tarde.</p>`;
+            document.getElementById("weatherResult").style.display = "block"; // Asegurarnos de que se muestre la sección de error
         });
 }
 
