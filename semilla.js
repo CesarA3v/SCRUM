@@ -110,7 +110,7 @@ function getWeatherByCurrentLocation() {
 
                 // Restaurar el estado del botón en caso de error
                 const locationButton = document.querySelector(".btn");
-                locationButton.innerHTML = "Usar ubicación actual";
+                locationButton.innerHTML = "Calcular";
                 locationButton.disabled = false;
             }
         );
@@ -119,7 +119,7 @@ function getWeatherByCurrentLocation() {
 
         // Restaurar el estado del botón en caso de que la geolocalización no sea soportada
         const locationButton = document.querySelector(".btn");
-        locationButton.innerHTML = "Usar ubicación actual";
+        locationButton.innerHTML = "Calcular";
         locationButton.disabled = false;
     }
 }
@@ -131,7 +131,7 @@ function fetchWeather(url) {
         .then(data => {
             // Restaurar el estado del botón después de la solicitud
             const locationButton = document.querySelector(".btn");
-            locationButton.innerHTML = "Usar ubicación actual";
+            locationButton.innerHTML = "Calcular";
             locationButton.disabled = false;
 
             if (data.error) {
@@ -158,7 +158,7 @@ function fetchWeather(url) {
         .catch((err) => {
             // Restaurar el estado del botón después de la solicitud
             const locationButton = document.querySelector(".btn");
-            locationButton.innerHTML = "Usar ubicación actual";
+            locationButton.innerHTML = "Calcular";
             locationButton.disabled = false;
 
             document.getElementById("weatherResult").innerHTML = `<p>Hubo un error al obtener los datos. Intenta de nuevo más tarde.</p>`;
