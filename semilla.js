@@ -1,7 +1,7 @@
 // Crop description dictionary with detailed information
 const cropDescriptions = {
     "Trigo": {
-        description: "El trigo es un cultivo estratégico en Chihuahua, adaptado a climas semi-áridos. Es fundamental para la seguridad alimentaria y la economía agrícola de la región.",
+        description: "El trigo es un cultivo estratégico en Chihuahua, adaptado a climas semi-áridos. Es fundamental para la seguridad alimentaria y la economía agrícola de la región. Temperatura promedio durante el ciclo del cultivo:10°C – 25°C, Cantidad de lluvia necesaria para el desarrollo del cultivo: 300 – 600 mm, Zonas recomendadas según la altitud sobre el nivel del mar: 500 – 2,500 msnm, Estaciones de siembra: Otoño e invierno. Cotizacion: $4.85 KG",
         benefits: [
             "Alto valor nutricional",
             "Resistente a sequías moderadas",
@@ -10,52 +10,52 @@ const cropDescriptions = {
         challengeTips: "Requiere rotación de cultivos y control preciso de riego para mantener su productividad."
     },
     "Algodón": {
-        description: "El algodón es un cultivo industrial clave en Chihuahua, conocido por su adaptabilidad a suelos áridos y su importancia económica.",
+        description: "El algodón es un cultivo industrial clave en Chihuahua, conocido por su adaptabilidad a suelos áridos y su importancia económica. Temperatura promedio durante el ciclo del cultivo: 25°C - 35°C, Cantidad de lluvia necesaria para el desarrollo del cultivo': '400 - 700 mm',Zonas recomendadas según la altitud sobre el nivel del mar: '200 - 1,200 msnm, Fechas recomendadas para la siembra: Primavera (cuando el clima es cálido). Cotizacion: $36.53 KG",
         benefits: [
             "Materia prima para textiles",
             "Buena resistencia al calor",
             "Fuente importante de ingreso para agricultores"
         ],
-        challengeTips: "Necesita control de plagas y un manejo cuidadoso del agua durante su crecimiento."
+        challengeTips: "Necesita control de plagas y un manejo cuidadoso del agua durante su crecimiento, Evitar temperaturas <10°C."
     },
     "Alfalfa": {
-        description: "La alfalfa es un forraje crucial para la ganadería de Chihuahua, destacando por su alto valor nutritivo y adaptabilidad.",
+        description: "La alfalfa es un forraje crucial para la ganadería de Chihuahua, destacando por su alto valor nutritivo y adaptabilidad. Rango de temperaturas ideales: '18°C - 28°C, Cantidad de lluvia necesaria para el desarrollo del cultivo: '400 - 600 mm, Zonas recomendadas según la altitud sobre el nivel del mar: '1,000 - 2,500 msnm,Fechas recomendadas para la siembra: Primavera o otoño, Cotizacion: $2.50 KG",
         benefits: [
             "Excelente para alimentación ganadera",
             "Alta eficiencia en el uso del agua",
             "Mejora la salud del suelo"
         ],
-        challengeTips: "Requiere un sistema de riego eficiente y rotación con otros cultivos."
+        challengeTips: "Requiere un sistema de riego eficiente y rotación con otros cultivos. Evitar temperaturas <5°C'"
     },
     "Nuez": {
-        description: "Los huertos de nuez en Chihuahua son reconocidos mundialmente por su calidad y son un cultivo de alto valor económico.",
+        description: "Los huertos de nuez en Chihuahua son reconocidos mundialmente por su calidad y son un cultivo de alto valor económico. Rango de temperaturas ideales:18°C - 30°C, Cantidad de lluvia necesaria para el desarrollo del cultivo.: 400 - 600 mm, Zonas recomendadas según la altitud sobre el nivel del mar: '1,000 - 2,000 msnm, Estación de siembra: Primavera. Cotizacion: $42.50 KG",
         benefits: [
             "Alto valor de exportación",
             "Cultivo perenne con larga vida productiva",
             "Resistente a condiciones climáticas variadas"
         ],
-        challengeTips: "Necesita inversión inicial alta y cuidados específicos durante el establecimiento del huerto."
+        challengeTips: "Necesita inversión inicial alta y cuidados específicos durante el establecimiento del huerto, Evitar temperaturas <0°C."
     },
     "Jalapeño": {
-        description: "El chile jalapeño es un orgullo de la agricultura chihuahuense, conocido por su sabor intenso y versatilidad culinaria.",
+        description: "El chile jalapeño es un orgullo de la agròcultura chihuahuense, conocido por su sabor intenso y versatilidad culinaria. Rango de temperaturas ideales: 20°C - 30°C, Cantidad de lluvia necesaria para el desarrollo del cultivo: '500 - 700 mm, Zonas recomendadas según la altitud sobre el nivel del mar': '500 - 2,000 msnm, Estación de siembra: Primavera o Verano. Cotizacion: $30.00 KG",
         benefits: [
             "Alto valor en mercados nacionales e internacionales",
             "Adaptable a diferentes microclimas",
             "Demanda constante en la industria alimentaria"
         ],
-        challengeTips: "Sensible a cambios bruscos de temperatura, requiere monitoreo constante."
+        challengeTips: "Sensible a cambios bruscos de temperatura, requiere monitoreo constante. Evitar temperaturas <5°C'"
     },
     "Avena": {
-        description: "La avena es un cultivo versátil en Chihuahua, importante tanto para consumo humano como para la alimentación ganadera.",
+        description: "La avena es un cultivo versátil en Chihuahua, importante tanto para consumo humano como para la alimentación ganadera. Temperatura promedio durante el ciclo del cultivo: '10°C - 24°, Cantidad de lluvia necesaria para el desarrollo del cultivo: '600 - 800 mm. Zonas recomendadas según la altitud sobre el nivel del mar: '1,000 - 3,000 msnm', Fechas recomendadas para aprovechar lluvias o riego: 'Otoño o invierno', Cotizacion: 70$ por KG.",
         benefits: [
             "Excelente para rotación de cultivos",
             "Bajo costo de producción",
             "Múltiples usos alimenticios"
         ],
-        challengeTips: "Prefiere climas más frescos y requiere un manejo preciso de la humedad del suelo."
+        challengeTips: "Prefiere climas más frescos y requiere un manejo preciso de la humedad del suelo. Evitar temperaturas <5°C"
     },
     "Cacahuate": {
-        description: "El cacahuate es un cultivo tradicional en Chihuahua, apreciado por su adaptabilidad y valor nutricional.",
+        description: "El cacahuate es un cultivo tradicional en Chihuahua, apreciado por su adaptabilidad y valor nutricional. Temperatura promedio durante el ciclo del cultivo:20°C – 30°C, Cantidad de lluvia necesaria para el desarrollo del cultivo: 500 – 1,200 mm, Zonas recomendadas según la altitud sobre el nivel del mar: 200 – 1,500 msnm, Estaciones de siembra: Primavera, al inicio de la temporada de lluvias. Cotizacion: $24.00 KG.",
         benefits: [
             "Rico en proteínas y grasas saludables",
             "Buen cultivo para suelos arenosos",
@@ -64,13 +64,13 @@ const cropDescriptions = {
         challengeTips: "Requiere suelos bien drenados y un control cuidadoso de la humedad."
     },
     "Manzana Roja": {
-        description: "Los huertos de manzana de Chihuahua son famosos por su calidad, especialmente en regiones como Cuauhtémoc.",
+        description: "Los huertos de manzana de Chihuahua son famosos por su calidad, especialmente en regiones como Cuauhtémoc. Temperatura promedio durante el ciclo del cultivo: '18°C - 24°C, Cantidad de lluvia necesaria para el desarrollo del cultivo: 600 - 1,200 mm, Zonas recomendadas según la altitud sobre el nivel del mar: '1,500 - 2,500 msnm', Fechas recomendadas para la plantación de árboles jóvenes: Invierno (dormancia). Cotizacion: $14 KG.",
         benefits: [
             "Alta demanda en mercados nacionales",
             "Cultivo de alto valor económico",
             "Excelente para exportación"
         ],
-        challengeTips: "Necesita un periodo de frío específico y protección contra heladas tardías."
+        challengeTips: "Necesita un periodo de frío específico y protección contra heladas tardías, Evitar heladas durante la floración y formación del fruto."
     }
 };
 
