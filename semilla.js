@@ -76,6 +76,19 @@ const cropDescriptions = {
 
 const apiKey = "02ba7131593e4ca693044700243011";  // Tu clave API de WeatherAPI
 
+function calculateAvgTemp(forecastData) {
+  let totalTemp = 0;
+  let daysCount = forecastData.length;
+
+  // Sumar las temperaturas de cada día
+  forecastData.forEach(day => {
+      totalTemp += day.day.avgtemp_c; // Promedio diario
+  });
+
+  // Calcular el promedio de temperaturas
+  return (totalTemp / daysCount).toFixed(2);
+}
+
 // Función para obtener el clima por ubicación actual
 function getWeatherByCurrentLocation() {
     // Cambiar el texto del botón a "Cargando..." y deshabilitarlo mientras se obtiene la ubicación
@@ -140,6 +153,8 @@ function fetchWeather(url) {
                 const forecast = data.forecast.forecastday[0];  // Accede al primer día del pronóstico
                 const current = data.current;
                 const location = data.location;
+                const joni = data.forecast.forecastday;  // Accede a los datos de pronóstico de 30 días
+                const avgtemp = calculateAvgTemp(joni);
 
                 // Mostrar los datos del clima
                 document.getElementById("weatherResult").innerHTML = `
@@ -147,12 +162,13 @@ function fetchWeather(url) {
                     <p><strong>Última actualización:</strong> ${forecast.date}</p>
                     <p><strong>Condición:</strong> ${forecast.day.condition.text}</p>
                     <p><strong>Temperatura actual:</strong> ${current.temp_c} °C (${current.temp_f} °F)</p>
+                    <p><strong>Temperatura mensual: </strong> ${avgtemp} °C</p>
                     <p><strong>Humedad:</strong> ${forecast.day.avghumidity}%</p>
                 `;
 
                 // Hacer visible el contenedor de sugerencias de cultivos
                 document.getElementById("cropSuggestions").style.display = 'block'; 
-                suggestCrops(current.temp_c, forecast.day.avghumidity, document.getElementById("soilType").value);
+                suggestCrops(avgtemp, forecast.day.avghumidity, document.getElementById("soilType").value);
             }
         })
         .catch((err) => {
