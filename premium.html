@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Optilife - Predicción de Cosechas</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f9f4;
+            color: #333;
+            overflow-x: hidden;
+        }
+
+        /* Contenedor principal con bordes redondeados */
+        .main-container {
+            width: 80%;
+            margin: 50px auto;
+            background-color: #ffffff;
+            border-radius: 15px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+            overflow: hidden;
+        }
+
+        section {
+            text-align: center;
+            animation: fadeInUp 1s ease-out;
+        }
+
+        .cta-btn {
+            background-color: #81c784;
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            font-size: 1.2rem;
+            cursor: pointer;
+            text-transform: uppercase;
+            margin-top: 20px;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+
+        .cta-btn:hover {
+            background-color: #66bb6a;
+            transform: scale(1.1);
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            color: #388e3c;
+        }
+
+        .section-description {
+            font-size: 1.1rem;
+            margin-bottom: 40px;
+            color: #666;
+        }
+
+        .select-container {
+            margin-bottom: 40px;
+        }
+
+        select {
+            padding: 10px;
+            font-size: 1.1rem;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            background-color: white;
+            cursor: pointer;
+            transition: border-color 0.3s;
+        }
+
+        select:hover {
+            border-color: #81c784;
+        }
+
+        .chart-container {
+            width: 100%;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        footer {
+            background-color: #388e3c;
+            color: white;
+            padding: 20px;
+            text-align: center;
+            margin-top: 50px;
+        }
+
+        footer a {
+            color: white;
+            text-decoration: none;
+            margin: 0 10px;
+        }
+
+        /* Animaciones */
+        @keyframes fadeInUp {
+            0% { opacity: 0; transform: translateY(20px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+
+<div class="main-container">
+    <section>
+        <h2 class="section-title">¿Qué cultivo sembrar este mes?</h2>
+        <p class="section-description">Selecciona el tipo de cultivo y descubre las ganancias estimadas por mes en Chihuahua, basadas en datos históricos y condiciones locales.</p>
+
+        <!-- Selector de Cultivos -->
+        <div class="select-container">
+            <label for="cropSelect">Elige el tipo de cultivo:</label>
+            <select id="cropSelect">
+                <option value="manzana">Manzana</option>
+                <option value="tomate">Tomate</option>
+                <option value="trigo">Trigo</option>
+                <option value="nuez">Nuez</option>
+                <option value="avena">Avena</option>
+                <option value="algodon">Algodón</option>
+                <option value="alfalfa">Alfalfa</option>
+                <option value="cacahuate">Cacahuate</option>
+                <option value="jalapeno">Jalapeño</option>
+            </select>
+        </div>
+
+        <!-- Botón de Llamada a la Acción -->
+        <button class="cta-btn" onclick="updateChart()">Ver ganancias</button>
+    </section>
+
+    <section>
+        <h2 class="section-title">Ganancias por Mes</h2>
+        <p class="section-description">Este gráfico muestra las ganancias mensuales estimadas para el cultivo seleccionado.</p>
+
+        <!-- Gráfico -->
+        <div class="chart-container">
+            <canvas id="incomeChart"></canvas>
+        </div>
+    </section>
+</div>
+
+<footer>
+    <p>&copy; 2024 Optilife | <a href="#">Términos y Condiciones</a> | <a href="#">Política de Privacidad</a></p>
+</footer>
+
+<!-- Chart.js CDN -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+    // Función para generar datos aleatorios con ligera variabilidad
+    function generateRandomData(baseValue, variability) {
+        return Array.from({ length: 12 }, () => {
+            let fluctuation = (Math.random() - 0.5) * variability;
+            return Math.max(0, Math.round(baseValue + fluctuation));
+        });
+    }
+
+    // Datos de ejemplo para los cultivos en Chihuahua con fluctuaciones aleatorias
+    const data = {
+        manzana: generateRandomData(1500, 1000),
+        tomate: generateRandomData(1300, 1000),
+        trigo: generateRandomData(1000, 1000),
+        nuez: generateRandomData(1200, 1000),
+        avena: generateRandomData(1100, 1000),
+        algodon: generateRandomData(900, 1000),
+        alfalfa: generateRandomData(800, 1000),
+        cacahuate: generateRandomData(1400, 1000),
+        jalapeno: generateRandomData(1500, 350),
+    };
+
+    // Crear el gráfico inicial
+    const ctx = document.getElementById('incomeChart').getContext('2d');
+    let incomeChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+            datasets: [{
+                label: 'Ganancia Estimada (MXN)',
+                data: data.manzana,  // Default is Manzana
+                backgroundColor: '#66bb6a',
+                borderColor: '#388e3c',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    max: 2000,  // Limitar la ganancia máxima a 2000 para evitar un gráfico exponencial
+                    stepSize: 250
+                }
+            },
+            animation: {
+                duration: 1000,
+                easing: 'easeOutQuad'  // Transición suave
+            }
+        }
+    });
+
+    // Función para actualizar el gráfico según el cultivo seleccionado
+    function updateChart() {
+        const selectedCrop = document.getElementById('cropSelect').value;
+
+        incomeChart.data.datasets[0].data = data[selectedCrop];
+        incomeChart.data.datasets[0].label = `Ganancia Estimada (${capitalizeFirstLetter(selectedCrop)})`;
+        incomeChart.update();
+    }
+
+    // Función para capitalizar la primera letra de un texto
+    function capitalizeFirstLetter(string) {
+        return string.charAt(0).toUpperCase() + string.slice(1);
+    }
+</script>
+
+</body>
+</html>
