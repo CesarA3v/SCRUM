@@ -56,7 +56,6 @@
             background-color: #45a049;
         }
 
-        /* Estilos del div con la información */
         .info {
             margin-top: 20px;
             padding: 15px;
@@ -65,7 +64,7 @@
             color: #333;
             display: none;
             animation: fadeIn 1s forwards;
-            border: 2px solid #4CAF50; /* Borde verde más sutil */
+            border: 2px solid #4CAF50;
             max-width: 400px;
             margin: 20px auto;
             font-size: 16px;
@@ -81,7 +80,6 @@
             line-height: 1.4;
         }
 
-        /* Animaciones */
         @keyframes fadeIn {
             0% {
                 opacity: 0;
@@ -103,17 +101,14 @@
                 opacity: 1;
             }
         }
-
     </style>
 </head>
 <body>
-
     <div class="container">
         <h1>Tipo de Suelo</h1>
         <p>Haz clic en el botón para permitir el acceso a tu ubicación y conocer el tipo de suelo en tu área.</p>
-        <button class="btn btn-primary btn-block" onclick="getWeatherByCurrentLocation()">Usar ubicación actual</button>
+        <button id="getLocationBtn">Usar ubicación actual</button>
         
-        <!-- Div con la información del tipo de suelo -->
         <div id="soilInfo" class="info">
             <h3 id="soilType"></h3>
             <p id="soilDescription"></p>
@@ -121,9 +116,8 @@
     </div>
 
     <script>
-        const apiKey = "02ba7131593e4ca693044700243011"; // Tu clave API de WeatherAPI
+        const apiKey = "02ba7131593e4ca693044700243011"; // Replace with your actual WeatherAPI key
 
-        // Función para obtener la ubicación
         function getLocation() {
             if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(fetchWeatherData, showError);
@@ -132,37 +126,31 @@
             }
         }
 
-        // Función para mostrar el error si no se puede obtener la ubicación
         function showError(error) {
             alert("Error al obtener la ubicación: " + error.message);
         }
 
-        // Función para obtener el clima utilizando la API de WeatherAPI
         function fetchWeatherData(position) {
             const lat = position.coords.latitude;
             const lon = position.coords.longitude;
 
-            // Realizamos la llamada a la API
             const url = `https://api.weatherapi.com/v1/current.json?key=${apiKey}&q=${lat},${lon}`;
 
             fetch(url)
                 .then(response => response.json())
                 .then(data => {
-                    // Procesamos la respuesta de la API
                     const temperature = data.current.temp_c;
                     const soilType = determineSoilType(temperature);
 
-                    // Mostrar el tipo de suelo y la descripción
                     document.getElementById("soilType").textContent = soilType.type;
                     document.getElementById("soilDescription").textContent = soilType.description;
-                    document.getElementById("soilInfo").style.display = "block"; // Mostrar el div de información
+                    document.getElementById("soilInfo").style.display = "block";
                 })
                 .catch(error => {
                     alert("Error al obtener la información del clima: " + error);
                 });
         }
 
-        // Función para determinar el tipo de suelo basado en la temperatura
         function determineSoilType(temperature) {
             let soilType = { type: "Desconocido", description: "No se pudo determinar el tipo de suelo." };
 
@@ -180,9 +168,8 @@
             return soilType;
         }
 
-        // Agregar evento al botón para obtener la ubicación
+        // Fixed: Corrected event listener and function call
         document.getElementById("getLocationBtn").addEventListener("click", getLocation);
     </script>
-
 </body>
 </html>
