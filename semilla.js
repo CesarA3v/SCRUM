@@ -212,7 +212,7 @@ function displayCropSuggestions(crops) {
         let color = getColorForSuccess(successRate);
         
         cropElement.innerHTML = `
-    <div class="d-flex align-items-center" id="miDiv" style="margin-top: -20px;">
+    <div class="d-flex align-items-center" id="miDiv">
         <div class="crop-icon">${crop.icon}</div>
         <div class="flex-grow-1">
             <span class="crop-name">${crop.name}</span>
