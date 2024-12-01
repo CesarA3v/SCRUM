@@ -1,3 +1,79 @@
+// Crop description dictionary with detailed information
+const cropDescriptions = {
+    "Trigo": {
+        description: "El trigo es un cultivo estratégico en Chihuahua, adaptado a climas semi-áridos. Es fundamental para la seguridad alimentaria y la economía agrícola de la región.",
+        benefits: [
+            "Alto valor nutricional",
+            "Resistente a sequías moderadas",
+            "Importante para la industria alimentaria local"
+        ],
+        challengeTips: "Requiere rotación de cultivos y control preciso de riego para mantener su productividad."
+    },
+    "Algodón": {
+        description: "El algodón es un cultivo industrial clave en Chihuahua, conocido por su adaptabilidad a suelos áridos y su importancia económica.",
+        benefits: [
+            "Materia prima para textiles",
+            "Buena resistencia al calor",
+            "Fuente importante de ingreso para agricultores"
+        ],
+        challengeTips: "Necesita control de plagas y un manejo cuidadoso del agua durante su crecimiento."
+    },
+    "Alfalfa": {
+        description: "La alfalfa es un forraje crucial para la ganadería de Chihuahua, destacando por su alto valor nutritivo y adaptabilidad.",
+        benefits: [
+            "Excelente para alimentación ganadera",
+            "Alta eficiencia en el uso del agua",
+            "Mejora la salud del suelo"
+        ],
+        challengeTips: "Requiere un sistema de riego eficiente y rotación con otros cultivos."
+    },
+    "Nuez": {
+        description: "Los huertos de nuez en Chihuahua son reconocidos mundialmente por su calidad y son un cultivo de alto valor económico.",
+        benefits: [
+            "Alto valor de exportación",
+            "Cultivo perenne con larga vida productiva",
+            "Resistente a condiciones climáticas variadas"
+        ],
+        challengeTips: "Necesita inversión inicial alta y cuidados específicos durante el establecimiento del huerto."
+    },
+    "Jalapeño": {
+        description: "El chile jalapeño es un orgullo de la agricultura chihuahuense, conocido por su sabor intenso y versatilidad culinaria.",
+        benefits: [
+            "Alto valor en mercados nacionales e internacionales",
+            "Adaptable a diferentes microclimas",
+            "Demanda constante en la industria alimentaria"
+        ],
+        challengeTips: "Sensible a cambios bruscos de temperatura, requiere monitoreo constante."
+    },
+    "Avena": {
+        description: "La avena es un cultivo versátil en Chihuahua, importante tanto para consumo humano como para la alimentación ganadera.",
+        benefits: [
+            "Excelente para rotación de cultivos",
+            "Bajo costo de producción",
+            "Múltiples usos alimenticios"
+        ],
+        challengeTips: "Prefiere climas más frescos y requiere un manejo preciso de la humedad del suelo."
+    },
+    "Cacahuate": {
+        description: "El cacahuate es un cultivo tradicional en Chihuahua, apreciado por su adaptabilidad y valor nutricional.",
+        benefits: [
+            "Rico en proteínas y grasas saludables",
+            "Buen cultivo para suelos arenosos",
+            "Importante para la economía agrícola local"
+        ],
+        challengeTips: "Requiere suelos bien drenados y un control cuidadoso de la humedad."
+    },
+    "Manzana Roja": {
+        description: "Los huertos de manzana de Chihuahua son famosos por su calidad, especialmente en regiones como Cuauhtémoc.",
+        benefits: [
+            "Alta demanda en mercados nacionales",
+            "Cultivo de alto valor económico",
+            "Excelente para exportación"
+        ],
+        challengeTips: "Necesita un periodo de frío específico y protección contra heladas tardías."
+    }
+};
+
 const apiKey = "02ba7131593e4ca693044700243011";  // Tu clave API de WeatherAPI
 
 // Función para obtener el clima por ubicación actual
@@ -90,7 +166,6 @@ function fetchWeather(url) {
         });
 }
 
-
 // Función para sugerir cultivos según el clima y tipo de suelo
 function suggestCrops(temperature, humidity, soilType) {
     let suggestedCrops = [];
@@ -131,17 +206,16 @@ function suggestCrops(temperature, humidity, soilType) {
 function displayCropSuggestions(crops) {
     const cropSuggestionsDiv = document.getElementById("cropSuggestions");
     cropSuggestionsDiv.innerHTML = "";  // Limpiar las sugerencias anteriores
-
-    // Mostrar cada cultivo y su tasa de éxito
+    
     crops.forEach(crop => {
         const cropElement = document.createElement("li");
         cropElement.classList.add("crop-element");  // Agregar la clase para el borde dinámico
 
         const successRate = crop.successRate;
         let color = getColorForSuccess(successRate);
-
+        
         cropElement.innerHTML = `
-            <div class="d-flex align-items-center">
+            <div class="d-flex align-items-center" id="miDiv">
                 <div class="crop-icon">${crop.icon}</div>
                 <div class="flex-grow-1">
                     <span class="crop-name">${crop.name}</span>
@@ -151,10 +225,34 @@ function displayCropSuggestions(crops) {
                     </div>
                 </div>
             </div>
+            <div class="crop-details" style="display: none; padding: 10px; background-color: #f8f9fa; border-radius: 5px; margin-top: 10px;">
+                <h5>Detalles del Cultivo</h5>
+                <p><strong>Descripción:</strong> ${cropDescriptions[crop.name].description}</p>
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6>Beneficios</h6>
+                        <ul>
+                            ${cropDescriptions[crop.name].benefits.map(benefit => `<li>${benefit}</li>`).join('')}
+                        </ul>
+                    </div>
+                    <div class="col-md-6">
+                        <h6>Consejos de Cultivo</h6>
+                        <p>${cropDescriptions[crop.name].challengeTips}</p>
+                    </div>
+                </div>
+            </div>
         `;
+        
+        // Add click event to toggle details
+        cropElement.addEventListener('click', function() {
+            const detailsDiv = this.querySelector('.crop-details');
+            detailsDiv.style.display = detailsDiv.style.display === 'none' ? 'block' : 'none';
+        });
+
         cropSuggestionsDiv.appendChild(cropElement);
     });
 }
+
 
 // Función para obtener el color correspondiente a la tasa de éxito
 function getColorForSuccess(successRate) {
