@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tipo de Suelo</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            padding: 20px;
+            text-align: center;
+        }
+        .container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        h1 {
+            color: #333;
+        }
+        button {
+            padding: 10px 20px;
+            margin: 10px 0;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .info {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #e3e3e3;
+            border-radius: 5px;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Determina el Tipo de Suelo</h1>
+        <p>Haz clic en el botón para permitir el acceso a tu ubicación y conocer el tipo de suelo en tu área.</p>
+        <button id="getLocationBtn">Obtener mi ubicación</button>
+        <div id="soilInfo" class="info" style="display: none;">
+            <h2>Tipo de Suelo:</h2>
+            <p id="soilType">Cargando...</p>
+            <p id="soilDescription">Descripción del tipo de suelo.</p>
+        </div>
+    </div>
+
+    <script>
+        const apiKey = "02ba7131593e4ca693044700243011"; // Tu clave API de WeatherAPI
+
+        // Función para obtener la ubicación
+        function getLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(fetchWeatherData, showError);
+            } else {
+                alert("La geolocalización no está soportada en tu navegador.");
+            }
+        }
+
+        // Función para mostrar el error si no se puede obtener la ubicación
+        function showError(error) {
+            alert("Error al obtener la ubicación: " + error.message);
+        }
+
+        // Función para obtener el clima utilizando la API de WeatherAPI
+        function fetchWeatherData(position) {
+            const lat = position.coords.latitude;
+            const lon = position.coords.longitude;
+
+            // Realizamos la llamada a la API
+            const url = `https://api.weatherapi.com/v1/current.json?key=${apiKey}&q=${lat},${lon}`;
+
+            fetch(url)
+                .then(response => response.json())
+                .then(data => {
+                    // Procesamos la respuesta de la API
+                    const temperature = data.current.temp_c;
+                    const soilType = determineSoilType(temperature);
+
+                    // Mostrar el tipo de suelo y la descripción
+                    document.getElementById("soilType").textContent = soilType.type;
+                    document.getElementById("soilDescription").textContent = soilType.description;
+                    document.getElementById("soilInfo").style.display = "block";
+                })
+                .catch(error => {
+                    alert("Error al obtener la información del clima: " + error);
+                });
+        }
+
+        // Función para determinar el tipo de suelo basado en la temperatura
+        function determineSoilType(temperature) {
+            let soilType = { type: "Desconocido", description: "No se pudo determinar el tipo de suelo." };
+
+            if (temperature < 15) {
+                soilType.type = "Arcilloso";
+                soilType.description = "El suelo arcilloso tiene partículas muy pequeñas y es más húmedo. Es común en áreas frías o húmedas.";
+            } else if (temperature >= 15 && temperature <= 25) {
+                soilType.type = "Limoso";
+                soilType.description = "El suelo limoso es fértil y retiene bien el agua, pero puede ser propenso a la compactación. Es común en áreas templadas.";
+            } else {
+                soilType.type = "Arenoso";
+                soilType.description = "El suelo arenoso drena rápidamente y es más cálido, pero tiene menos nutrientes. Es común en áreas cálidas y secas.";
+            }
+
+            return soilType;
+        }
+
+        // Agregar evento al botón para obtener la ubicación
+        document.getElementById("getLocationBtn").addEventListener("click", getLocation);
+    </script>
+</body>
+</html>
