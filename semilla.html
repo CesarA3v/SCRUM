@@ -28,6 +28,45 @@
         .btn {
             width: 250px;  /* Ancho fijo para el botón */
         }
+
+        /* Estilos para las sugerencias de cultivos */
+        .crop-element {
+            border: 1px solid #ccc;
+            margin-bottom: 1rem;
+            padding: 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .crop-element:hover {
+            background-color: #f0f0f0;
+        }
+
+        .crop-icon {
+            font-size: 2rem;
+            margin-right: 1rem;
+        }
+
+        .success-bar {
+            background-color: #e0e0e0;
+            height: 10px;
+            border-radius: 5px;
+        }
+
+        .success-fill {
+            height: 100%;
+            border-radius: 5px;
+        }
+
+        #cropExplanation {
+            display: none;
+            margin-top: 2rem;
+            padding: 1rem;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            background-color: #f9f9f9;
+        }
     </style>
 </head>
 <body>
@@ -56,6 +95,12 @@
 
         <!-- Sección de sugerencias de cultivos -->
         <div id="cropSuggestions"></div>
+
+        <!-- Medidor dinámico de explicación -->
+        <div id="cropExplanation" class="mt-4">
+            <h4>Razón de la Tasa de Éxito:</h4>
+            <p id="explanationText"></p>
+        </div>
     </div>
 
     <!-- Incluir Bootstrap JS (para componentes interactivos) -->

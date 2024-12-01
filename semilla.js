@@ -64,21 +64,17 @@ function fetchWeather(url) {
 function suggestCrops(temperature, humidity, soilType) {
     let suggestedCrops = [];
 
- // Calcular la tasa de éxito para cada cultivo basado en condiciones
-const crops = [
-  { name: "Maíz", icon: "🌽", tempRange: [18, 30], humidityRange: [50, 80], soilType: "arcilloso", baseSuccess: 80 },
-  { name: "Tomate", icon: "🍅", tempRange: [20, 30], humidityRange: [60, 80], soilType: "arenoso", baseSuccess: 85 },
-  { name: "Frijol", icon: "🌱", tempRange: [20, 30], humidityRange: [50, 70], soilType: "limoso", baseSuccess: 75 },
-  { name: "Lechuga", icon: "🥬", tempRange: [15, 22], humidityRange: [60, 80], soilType: "limoso", baseSuccess: 80 },
-  { name: "Cebolla", icon: "🧅", tempRange: [18, 25], humidityRange: [50, 70], soilType: "arenoso", baseSuccess: 70 },
-  { name: "Zanahoria", icon: "🥕", tempRange: [15, 22], humidityRange: [50, 60], soilType: "limoso", baseSuccess: 80 },
-  { name: "Pepino", icon: "🥒", tempRange: [22, 30], humidityRange: [60, 80], soilType: "arenoso", baseSuccess: 75 },
-  { name: "Acelgas", icon: "🌿", tempRange: [15, 25], humidityRange: [50, 70], soilType: "arcilloso", baseSuccess: 65 },
-  // Agregar la manzana
-  { name: "Manzana", icon: "🍏", tempRange: [15, 25], humidityRange: [60, 80], soilType: "arcilloso", baseSuccess: 85 }
-];
-
-
+    // Definir los cultivos comunes en Chihuahua con parámetros más realistas
+    const crops = [
+        { name: "Trigo", icon: "🌾", tempRange: [10, 25], humidityRange: [50, 70], soilType: "arcilloso", baseSuccess: 90 },
+        { name: "Algodón", icon: "🌿", tempRange: [20, 35], humidityRange: [40, 60], soilType: "arenoso", baseSuccess: 80 },
+        { name: "Alfalfa", icon: "🌱", tempRange: [15, 30], humidityRange: [40, 70], soilType: "limoso", baseSuccess: 85 },
+        { name: "Nuez", icon: "🌰", tempRange: [10, 25], humidityRange: [60, 80], soilType: "arcilloso", baseSuccess: 75 },
+        { name: "Jalapeño", icon: "🌶️", tempRange: [20, 35], humidityRange: [50, 70], soilType: "arenoso", baseSuccess: 85 },
+        { name: "Avena", icon: "🌾", tempRange: [10, 20], humidityRange: [60, 80], soilType: "limoso", baseSuccess: 90 },
+        { name: "Cacahuate", icon: "🥜", tempRange: [20, 30], humidityRange: [50, 70], soilType: "arenoso", baseSuccess: 80 },
+        { name: "Manzana Roja", icon: "🍎", tempRange: [15, 25], humidityRange: [60, 80], soilType: "arcilloso", baseSuccess: 85 }
+    ];
 
     // Evaluar cada cultivo y su tasa de éxito
     crops.forEach(crop => {
@@ -90,7 +86,7 @@ const crops = [
 
         // Solo agregar cultivos con tasa de éxito mayor a 30% para mantener la relevancia
         if (cropSuccess >= 30) {
-            suggestedCrops.push({ name: crop.name, successRate: cropSuccess, icon: crop.icon });
+            suggestedCrops.push({ name: crop.name, successRate: cropSuccess, icon: crop.icon, explanation: getExplanation(cropSuccess, tempSuccess, humiditySuccess, soilSuccess) });
         }
     });
 
@@ -114,7 +110,7 @@ function displayCropSuggestions(crops) {
         let color = getColorForSuccess(successRate);
 
         cropElement.innerHTML = `
-            <div class="d-flex align-items-center">
+            <div class="d-flex align-items-center" onclick="showExplanation('${crop.name}')">
                 <div class="crop-icon">${crop.icon}</div>
                 <div class="flex-grow-1">
                     <span class="crop-name">${crop.name}</span>
@@ -129,6 +125,31 @@ function displayCropSuggestions(crops) {
     });
 }
 
+// Función para mostrar la explicación al hacer clic en un cultivo
+function showExplanation(cropName) {
+    const crop = crops.find(c => c.name === cropName);
+    const explanationText = document.getElementById("explanationText");
+    explanationText.innerHTML = crop.explanation;
+    
+    document.getElementById("cropExplanation").style.display = 'block';  // Mostrar la explicación
+}
+
+// Función para obtener la explicación del cultivo
+function getExplanation(cropSuccess, tempSuccess, humiditySuccess, soilSuccess) {
+    let explanation = "Este cultivo tiene una tasa de éxito de " + cropSuccess.toFixed(2) + "%.";
+
+    // Explicación de la tasa de éxito
+    if (cropSuccess >= 80) {
+        explanation += " Es un excelente cultivo para las condiciones actuales.";
+    } else if (cropSuccess >= 50) {
+        explanation += " Es un cultivo adecuado, aunque no ideal.";
+    } else {
+        explanation += " No es el mejor cultivo para estas condiciones.";
+    }
+
+    return explanation;
+}
+
 // Función para obtener el color correspondiente a la tasa de éxito
 function getColorForSuccess(successRate) {
     if (successRate >= 90) return "#2C6B2F";        // Verde oscuro (90-100%)
@@ -140,24 +161,20 @@ function getColorForSuccess(successRate) {
 
 // Función para calcular la tasa de éxito de la temperatura para cada cultivo
 function calculateTemperatureSuccess(temperature, tempRange) {
-    if (temperature >= tempRange[0] && temperature <= tempRange[1]) {
-        return 100;  // Tasa de éxito máxima si está en el rango ideal
-    } else if (temperature >= tempRange[0] - 5 && temperature <= tempRange[1] + 5) {
-        return 70;  // Tasa de éxito moderada si está cerca del rango ideal
-    } else {
-        return 40;  // Baja tasa de éxito si está fuera de los rangos ideales
-    }
+    const diff = Math.abs(temperature - (tempRange[0] + tempRange[1]) / 2);  // Desviación de la temperatura media
+    if (diff <= 5) return 100;
+    if (diff <= 10) return 80;
+    if (diff <= 15) return 60;
+    return 40;  // Baja tasa de éxito si la desviación es muy grande
 }
 
 // Función para calcular la tasa de éxito de la humedad para cada cultivo
 function calculateHumiditySuccess(humidity, humidityRange) {
-    if (humidity >= humidityRange[0] && humidity <= humidityRange[1]) {
-        return 100;  // Tasa de éxito máxima si está en el rango ideal
-    } else if (humidity >= humidityRange[0] - 10 && humidity <= humidityRange[1] + 10) {
-        return 70;  // Tasa de éxito moderada si está cerca del rango ideal
-    } else {
-        return 40;  // Baja tasa de éxito si está fuera de los rangos ideales
-    }
+    const diff = Math.abs(humidity - (humidityRange[0] + humidityRange[1]) / 2);  // Desviación de la humedad media
+    if (diff <= 5) return 100;
+    if (diff <= 10) return 75;
+    if (diff <= 15) return 50;
+    return 30;  // Baja tasa de éxito si la desviación es muy grande
 }
 
 // Función para calcular la tasa de éxito de acuerdo con el tipo de suelo
