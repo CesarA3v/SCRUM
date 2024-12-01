@@ -90,6 +90,7 @@ function fetchWeather(url) {
         });
 }
 
+
 // Función para sugerir cultivos según el clima y tipo de suelo
 function suggestCrops(temperature, humidity, soilType) {
     let suggestedCrops = [];

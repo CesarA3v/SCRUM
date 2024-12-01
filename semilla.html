@@ -5,50 +5,45 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Sugerencias de Cultivos</title>
 
-    <!-- Incluir el archivo de CSS -->
+    <!-- Tipografías de Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
     <link href="semilla.css" rel="stylesheet">
-
-    <!-- Incluir Bootstrap 5 -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
-
-    <!-- Incluir Font Awesome para los iconos -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
 
-    <!-- Incluir el archivo de JS -->
-    <script src="semilla.js" defer></script>
 
+
+    
 </head>
 <body>
-
-    <div id="app" class="container mt-5">
+    <div class="container">
         <!-- Título -->
-        <h2 class="text-center mb-0">Sugerencia de cultivos interactiva por Geolocalización</h2>
+        <h2>Sugerencias de Cultivos</h2>
+        <p>Obtén sugerencias de cultivos basadas en tu ubicación y el tipo de suelo.</p>
 
-        <!-- Botón para obtener la ubicación actual centrado -->
-        <div class="location-btn-container">
-            <button class="btn btn-primary" onclick="getWeatherByCurrentLocation()">Usar ubicación actual</button>
-        </div>
+        <!-- Botón para obtener la ubicación actual -->
+        <button class="btn" onclick="getWeatherByCurrentLocation()">Usar ubicación actual</button>
 
         <!-- Selector de tipo de suelo -->
-        <div class="mt-4">
-            <h4>Selecciona el tipo de suelo</h4>
-            <select id="soilType" class="form-select">
-                <option value="arcilloso">Arcilloso</option>
-                <option value="arenoso">Arenoso</option>
-                <option value="limoso">Limoso</option>
-            </select>
-        </div>
+        <h4>Selecciona el tipo de suelo</h4>
+        <select id="soilType">
+            <option value="arcilloso">Arcilloso</option>
+            <option value="arenoso">Arenoso</option>
+            <option value="limoso">Limoso</option>
+        </select>
 
-        <!-- Resultado del clima -->
-        <div class="mt-4" id="weatherResult"></div>
+       <!-- Resultado del clima -->
+<div id="weatherResult" style="margin-bottom: 20px;"></div>
+
 
         <!-- Sección de sugerencias de cultivos -->
         <div id="cropSuggestions"></div>
     </div>
 
-    <!-- Incluir Bootstrap JS (para componentes interactivos) -->
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.min.js"></script>
-
+    <!-- Incluir el archivo de JS -->
+    <script src="semilla.js" defer></script>
+     <!-- Incluir Bootstrap JS (para componentes interactivos) -->
+     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.min.js"></script>
+ 
 </body>
-</html>
+</html>  
