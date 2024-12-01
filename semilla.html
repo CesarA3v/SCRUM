@@ -23,18 +23,18 @@
         <!-- Botón para obtener la ubicación actual -->
         <button class="btn" onclick="getWeatherByCurrentLocation()">Usar ubicación actual</button>
 
-        <!-- Selector de tipo de suelo -->
-        <h4>Selecciona el tipo de suelo</h4>
-        <select id="soilType">
-            <option value="arcilloso">Arcilloso</option>
-            <option value="arenoso">Arenoso</option>
-            <option value="limoso">Limoso</option>
-        </select>
+      
 
        <!-- Resultado del clima -->
-<div id="weatherResult" style="margin-bottom: 20px;"></div>
+<div id="weatherResult" style="margin-bottom: -50px;"></div>
 
-
+  <!-- Selector de tipo de suelo -->
+  <h4>Selecciona el tipo de suelo</h4>
+  <select id="soilType" class="soilType">
+      <option value="arcilloso">Arcilloso</option>
+      <option value="arenoso">Arenoso</option>
+      <option value="limoso">Limoso</option>
+  </select>
         <!-- Sección de sugerencias de cultivos -->
         <div id="cropSuggestions"></div>
     </div>

@@ -63,6 +63,7 @@ body {
 #cropSuggestions {
   list-style-type: none;
   padding-left: 0;
+  margin-top: 20px;  /* Separar las sugerencias del clima */
 }
 
 #cropSuggestions li {
@@ -98,6 +99,7 @@ body {
   margin-right: 10px;
 }
 
+/* Ajustar el contenedor principal */
 .container {
   background-color: #fff;
   padding: 30px;
@@ -109,8 +111,9 @@ body {
   opacity: 0;
   transform: scale(0.8);
   animation: fadeIn 0.5s forwards;
-  margin-top: 20px;  /* Asegura un buen espacio desde la parte superior */
-
+  margin-top: 20px;
+  min-height: 500px;  /* Asegúrate de que el contenedor tenga una altura mínima */
+  overflow: auto;  /* Permite que el contenido adicional sea visible */
 }
 
 h1, h2 {
@@ -174,6 +177,8 @@ button:hover {
   max-width: 500px;
   margin: 20px auto;
   font-size: 16px;
+  margin-bottom: -110px;  /* Aumentar el margen para bajar más la información */
+
 }
 
 /* Animaciones */
@@ -205,7 +210,7 @@ button:hover {
   border-radius: 8px;
   margin-bottom: 20px;
   font-family: 'Roboto', sans-serif;
-  margin-top: 400px;
+  margin-top: 450px;  /* Ajusta la posición a 20px desde la parte superior */
 }
 
 
