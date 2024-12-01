@@ -2,6 +2,11 @@ const apiKey = "02ba7131593e4ca693044700243011";  // Tu clave API de WeatherAPI
 
 // Función para obtener el clima por ubicación actual
 function getWeatherByCurrentLocation() {
+    // Cambiar el texto del botón a "Cargando..." y deshabilitarlo mientras se obtiene la ubicación
+    const locationButton = document.querySelector(".btn");
+    locationButton.innerHTML = "Cargando...";
+    locationButton.disabled = true;
+
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(
             (position) => {
@@ -10,7 +15,12 @@ function getWeatherByCurrentLocation() {
 
                 // Hacer visible el contenedor de datos del clima mientras se cargan
                 document.getElementById("weatherResult").style.display = 'block';  // Hacer visible el div de clima
-                document.getElementById("weatherResult").innerHTML = `<p>Cargando datos...</p>`;
+                document.getElementById("weatherResult").innerHTML = `
+                    <div class="spinner-border" role="status">
+                        <span class="sr-only">Cargando...</span>
+                    </div>
+                    <p>Cargando datos...</p>
+                `;
 
                 // Ocultar el div de sugerencias de cultivos hasta que se muestren los datos
                 document.getElementById("cropSuggestions").style.display = 'none';
@@ -21,10 +31,20 @@ function getWeatherByCurrentLocation() {
             },
             (error) => {
                 alert("No se pudo obtener tu ubicación. Asegúrate de que la geolocalización está habilitada.");
+
+                // Restaurar el estado del botón en caso de error
+                const locationButton = document.querySelector(".btn");
+                locationButton.innerHTML = "Usar ubicación actual";
+                locationButton.disabled = false;
             }
         );
     } else {
         alert("Tu navegador no soporta geolocalización.");
+
+        // Restaurar el estado del botón en caso de que la geolocalización no sea soportada
+        const locationButton = document.querySelector(".btn");
+        locationButton.innerHTML = "Usar ubicación actual";
+        locationButton.disabled = false;
     }
 }
 
@@ -33,6 +53,11 @@ function fetchWeather(url) {
     fetch(url)
         .then(response => response.json())
         .then(data => {
+            // Restaurar el estado del botón después de la solicitud
+            const locationButton = document.querySelector(".btn");
+            locationButton.innerHTML = "Usar ubicación actual";
+            locationButton.disabled = false;
+
             if (data.error) {
                 document.getElementById("weatherResult").innerHTML = `<p>No se pudo obtener el clima. Intenta de nuevo.</p>`;
             } else {
@@ -55,6 +80,11 @@ function fetchWeather(url) {
             }
         })
         .catch((err) => {
+            // Restaurar el estado del botón después de la solicitud
+            const locationButton = document.querySelector(".btn");
+            locationButton.innerHTML = "Usar ubicación actual";
+            locationButton.disabled = false;
+
             document.getElementById("weatherResult").innerHTML = `<p>Hubo un error al obtener los datos. Intenta de nuevo más tarde.</p>`;
             console.error(err);
         });
